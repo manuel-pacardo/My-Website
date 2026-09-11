@@ -1,0 +1,1860 @@
+<!-- ========== PART 1 START ========== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AO II Written Exam Reviewer v2.0</title>
+<style>
+:root{
+  --p:#6d5cae;--pd:#514487;--a:#b7a9e8;--bg:#f5f3fa;--card:#fff;
+  --t:#29263a;--m:#696579;--b:#ddd8eb;--ok:#2e8b57;--bad:#c94c4c;
+  --ib:#f1effb;--sh:0 3px 12px rgba(67,53,105,.08);
+  --warn:#fff8df;--warn-border:#e1b93e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.container{max-width:1000px;margin:auto;padding:12px}
+header{background:linear-gradient(135deg,var(--pd),var(--p));color:white;padding:24px;border-radius:18px;box-shadow:var(--sh);text-align:center}
+header h1{margin:0 0 5px;font-size:25px}
+header .sub{font-size:14px;opacity:.95}
+header small{display:block;margin-top:8px;font-size:11px;opacity:.85}
+.nav{position:sticky;top:0;z-index:10;display:flex;gap:6px;overflow:auto;padding:8px 0;background:rgba(245,243,250,.95);backdrop-filter:blur(8px)}
+.tab{border:1px solid var(--b);background:white;color:var(--pd);padding:10px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:700;font-size:14px}
+.tab.active{background:var(--p);color:#fff}
+.content{display:none}
+.content.active{display:block}
+.card,.lesson,.interview{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:18px;margin:12px 0;box-shadow:var(--sh)}
+.lesson summary{cursor:pointer;font-weight:800;color:var(--pd);font-size:17px;padding:4px 0}
+.lesson p{margin:9px 0}
+.lesson ul,.lesson ol{margin:8px 0;padding-left:22px}
+.lesson li{margin:4px 0}
+.pill{display:inline-block;background:var(--ib);color:var(--pd);padding:4px 9px;border-radius:20px;font-size:12px;font-weight:700;margin:2px}
+.focus{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.focus label{padding:10px;background:#faf9fd;border:1px solid var(--b);border-radius:9px;cursor:pointer}
+.focus input{accent-color:var(--p);margin-right:7px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font-weight:700;background:var(--p);color:#fff;font-size:14px}
+.btn.alt{background:white;color:var(--pd);border:1px solid var(--b)}
+.btn:hover{opacity:.9}
+button:disabled{opacity:.5;cursor:not-allowed}
+.qbox{font-size:18px;font-weight:700;margin:15px 0}
+.choice{display:block;width:100%;text-align:left;background:white;border:1px solid var(--b);padding:12px;border-radius:9px;margin:8px 0;cursor:pointer;font-size:14px}
+.choice:hover{border-color:var(--p);background:#faf9ff}
+.choice.correct{background:#eaf7ef;border-color:#2e8b57}
+.choice.wrong{background:#fcecec;border-color:#c94c4c}
+.feedback{padding:13px;border-radius:10px;margin-top:12px}
+.correct-fb{background:#eaf7ef;border:1px solid #b9dfc9}
+.wrong-fb{background:#fcecec;border:1px solid #edbcbc}
+.progress{height:9px;background:#e5e1ee;border-radius:9px;overflow:hidden;margin:10px 0}
+.bar{height:100%;background:var(--p);width:0;transition:width .3s}
+.score{font-size:28px;font-weight:800;color:var(--pd)}
+textarea{width:100%;min-height:90px;border:1px solid var(--b);border-radius:9px;padding:10px;font-family:inherit;font-size:14px}
+.sample{display:none;background:var(--ib);padding:13px;border-radius:10px;margin-top:10px;border-left:4px solid var(--p)}
+.sample.show{display:block}
+.note{background:var(--warn);border-left:4px solid var(--warn-border);padding:10px;margin:10px 0;border-radius:0 8px 8px 0}
+.cheat{background:#fff;border:2px solid var(--p);border-radius:12px;padding:16px;margin:16px 0}
+.cheat h3{color:var(--pd);margin-top:0;margin-bottom:10px}
+.cheat ul{margin:0;padding-left:18px}
+.cheat li{margin:5px 0}
+.glossary{columns:2;gap:16px}
+.glossary p{margin:4px 0;break-inside:avoid}
+.glossary strong{color:var(--pd)}
+footer{text-align:center;color:var(--m);padding:25px;font-size:12px}
+h2,h3{color:var(--pd)}
+h2{margin-top:5px}
+.mode-select{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.mode-btn{padding:10px 16px;border:2px solid var(--b);background:white;border-radius:10px;cursor:pointer;font-weight:600;color:var(--pd)}
+.mode-btn.active{border-color:var(--p);background:var(--ib)}
+.review-item{padding:12px;border-left:4px solid var(--b);margin:10px 0;background:#faf9fd;border-radius:0 8px 8px 0}
+.review-item.correct{border-left-color:var(--ok)}
+.review-item.wrong{border-left-color:var(--bad)}
+.word-doc{background:#fff;border:1px solid #ccc;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:40px 50px;margin:15px 0;font-family:'Times New Roman',Times,serif;font-size:12px;line-height:1.6}
+.word-doc .letterhead{text-align:center;border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:20px}
+.word-doc .letterhead .agency{font-weight:bold;font-size:13px;text-transform:uppercase}
+.word-doc .memo-title{text-align:center;font-weight:bold;font-size:14px;margin:15px 0;text-transform:uppercase;letter-spacing:1px}
+.word-doc .memo-meta{display:grid;grid-template-columns:80px 1fr;gap:5px;margin:10px 0}
+.word-doc .memo-meta .lbl{font-weight:bold}
+.word-doc h4{margin:15px 0 5px 0}
+.word-doc table{width:100%;border-collapse:collapse;margin:10px 0}
+.word-doc table,.word-doc th,.word-doc td{border:1px solid #333}
+.word-doc th,.word-doc td{padding:5px 8px;text-align:left}
+.word-doc .sig-block{margin-top:40px}
+.word-doc .sig-line{border-top:1px solid #333;width:250px;margin-top:40px}
+.highlight{background:#fff3a0;padding:1px 3px;border-radius:3px}
+@media(max-width:600px){
+  .focus{grid-template-columns:1fr}
+  .glossary{columns:1}
+  .word-doc{padding:20px}
+  header h1{font-size:21px}
+}
+/* ========== TRIAL TIMER START ========== */
+#trialTimer{position:fixed;top:10px;right:10px;z-index:9998;background:rgba(81,68,135,.96);color:#fff;padding:7px 11px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+#trialDialog{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.48);align-items:center;justify-content:center;padding:20px}
+.trial-box{width:min(430px,100%);background:#fff;border-radius:18px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.25);text-align:center}
+.trial-box h3{margin:0 0 10px;color:var(--pd)}
+.trial-box p{margin:9px 0;color:var(--t)}
+.trial-box a{color:var(--pd);font-weight:800;word-break:break-all}
+.trial-ok{margin-top:15px;min-width:100px}
+/* ========== TRIAL TIMER END ========== */
+</style>
+</head>
+<body>
+<!-- ========== TRIAL TIMER UI START ========== -->
+<div id="trialTimer" aria-live="polite">Trial: 1:00</div>
+<div id="trialDialog" role="dialog" aria-modal="true" aria-labelledby="trialTitle">
+  <div class="trial-box">
+    <h3 id="trialTitle">⏰ Trial Complete</h3>
+    <p>Your <b>1-minute trial</b> has ended.</p>
+    <p>Click <b>OK</b> to refresh the page and start a new 1-minute trial.</p>
+    <button class="btn trial-ok" onclick="restartTrial()">OK</button>
+  </div>
+</div>
+<!-- ========== TRIAL TIMER UI END ========== -->
+<div class="container">
+
+<header>
+  <h1>Administrative Officer II Reviewer</h1>
+  <div class="sub">Written Exam &bull; Interview &bull; Practical Office Skills &bull; v2.0</div>
+  <small>Study aid &mdash; not an official DepEd/CSC examination<br>Always verify latest CSC, DepEd, GPPB, DBM & COA issuances</small>
+</header>
+
+<div class="card" style="border:2px solid var(--p);background:var(--ib)"><b>TRIAL VERSION — HOW TO AVAIL THE FULL VERSION</b><br>⏱️ This trial is limited to <b>1 minute</b>.<br>📚 After the trial ends, click <b>Avail Full Version</b> to open the Facebook page and request the full version.<br>✨ The full version has <b>no timer and no search bar</b>.</div>
+
+
+<div class="card full-version-help" style="margin-bottom:16px;text-align:center;">
+  <b>📚 WANT THE FULL VERSION?</b>
+  <p style="margin:8px 0;">Click the Facebook link below to contact <b>Manuel Pacardo</b>.</p>
+  <p style="margin:8px 0;">After opening Facebook, <b>send a message to Manuel Pacardo</b> to avail the full version.</p>
+  <p style="margin:12px 0 0;">
+    <a href="https://www.facebook.com/pacardzmanuel" rel="noopener" style="font-weight:800;">MESSAGE MANUEL PACARDO ON FACEBOOK</a>
+  </p>
+</div>
+
+<div class="nav">
+  <button class="tab active" onclick="switchTab('lessons',this)">Lessons</button>
+  <button class="tab" onclick="switchTab('exam',this)">Exam</button>
+  <button class="tab" onclick="switchTab('interview',this)">Interview</button>
+  <button class="tab" onclick="switchTab('drafting',this)">Document Drafting</button>
+</div>
+
+<!-- ========== LESSONS SECTION ========== -->
+<section id="lessons" class="content active">
+
+<div class="card"><b>How to use this reviewer:</b> Read lessons, memorize Quick Facts, then take practice exams. Review explanations after every answer.</div>
+<!-- ========== MUST-MEMORIZE ========== -->
+<div class="cheat">
+<h3>MUST-MEMORIZE &mdash; QUICK FACTS</h3>
+<ul>
+<li><b>RA 6713</b> &mdash; Code of Conduct & Ethical Standards for Public Officials & Employees</li>
+<li><b>RA 9184</b> &mdash; Government Procurement Reform Act (OLD)</li>
+<li><b>RA 12009</b> &mdash; New Government Procurement Act (CURRENT / MAIN LAW)</li>
+<li><b>RA 10173</b> &mdash; Data Privacy Act of 2012</li>
+<li><b>RA 10121</b> &mdash; Philippine Disaster Risk Reduction & Management Act of 2010</li>
+<li><b>RA 11210</b> &mdash; 105-Day Expanded Maternity Leave Law</li>
+<li><b>RA 8187</b> &mdash; Paternity Leave Act of 1996 (7 days)</li>
+<li><b>RA 9710</b> &mdash; Magna Carta of Women (Gynecological Leave)</li>
+<li><b>RA 9262</b> &mdash; VAWC Act (10-day leave for victims)</li>
+<li><b>RA 8972 / RA 11861</b> &mdash; Solo Parents' Welfare Act (7-day leave)</li>
+<li><b>RA 9155</b> &mdash; Governance of Basic Education Act of 2001</li>
+<li><b>RA 11032</b> &mdash; Ease of Doing Business Act</li>
+<li><b>CSC MC No. 41, s.1998</b> &mdash; Omnibus Rules on Leave (as amended)</li>
+<li><b>CSC MC No. 6, s.2020</b> &mdash; Amendments to Leave Rules</li>
+<li><b>EO 64, s.2024</b> &mdash; Salary update; 4 tranches; <b>Tranche 3: Jan 1, 2026</b>; Medical allowance &le; &peso;7,000/year; <b>JO/COS NOT COVERED</b></li>
+<li><b>Leave Credits:</b> 1.25 days VL + 1.25 days SL <b>per month</b> = 15 VL + 15 SL per year</li>
+<li><b>Maternity Leave:</b> 105 days full pay (live birth); 60 days full pay (miscarriage)</li>
+<li><b>Paternity Leave:</b> 7 days full pay per delivery &mdash; up to 4 children; married male only</li>
+<li><b>Solo Parent Leave:</b> 7 days/year (after 6 months service)</li>
+<li><b>VAWC Leave:</b> 10 days paid leave under RA 9262</li>
+<li><b>Special Privilege Leave:</b> 3 days/year, non-cumulative</li>
+<li><b>Gynecological Leave:</b> up to 2 months full pay under RA 9710</li>
+<li><b>Basic Principle:</b> Merit and Fitness</li>
+<li><b>8 Norms of Conduct (RA 6713):</b> Public Interest, Professionalism, Justness & Sincerity, Political Neutrality, Responsiveness, Nationalism & Patriotism, Commitment to Democracy, Simple Living</li>
+<li><b>SALN Filing:</b> Within 30 days after assumption; on/before April 30 annually; within 30 days after separation</li>
+<li><b>RA 6713 Response Deadline:</b> 15 working days to act on letters/requests</li>
+<li><b>Max Signatories:</b> 3 signatories per document (RA 6713)</li>
+<li><b>4 Thematic Areas (RA 10121):</b> Prevention & Mitigation, Preparedness, Response, Rehabilitation & Recovery</li>
+<li><b>Disaster Risk Formula:</b> Risk = (Hazard &times; Vulnerability) / Capacity</li>
+<li><b>Earthquake Drill:</b> Duck, Cover, and Hold</li>
+<li><b>Fire Triangle:</b> Oxygen, Fuel, Heat</li>
+<li><b>DRRM Drills:</b> Quarterly (every 3 months)</li>
+<li><b>BAC Composition:</b> 5 to 7 members; appointed by HOPE; term = 1 year renewable</li>
+<li><b>Observers:</b> At least 3 (1 from COA, 2 from private sector/NGOs); invited 5 calendar days before</li>
+<li><b>Pre-Bid Conference:</b> Mandatory if ABC &ge; &peso;1M for Goods</li>
+<li><b>PhilGEPS</b> &mdash; Philippine Government Electronic Procurement System</li>
+<li><b>Excel Formulas:</b> =SUM(), =AVERAGE(), =VLOOKUP(), =IF(), =COUNTIF(), =SUMIF(), =CONCATENATE()</li>
+<li><b>22 working days</b> &mdash; standard divisor for daily wage rate</li>
+<li><b>GSIS Personal Share:</b> 9% | <b>Government Share:</b> 12%</li>
+<li><b>MOOE</b> &mdash; Maintenance and Other Operating Expenses</li>
+<li><b>COA</b> &mdash; Commission on Audit (audits all government transactions)</li>
+<li><b>UACS</b> &mdash; Unified Account Code Structure</li>
+<li><b>Plantilla</b> &mdash; official list of authorized regular positions</li>
+<li><b>201 File</b> &mdash; employee's personal records folder</li>
+<li><b>PAR</b> &mdash; Property Acknowledgement Receipt (for high-value items)</li>
+<li><b>ICS</b> &mdash; Inventory Custodian Slip (for semi-expendable items)</li>
+</ul>
+</div>
+
+<!-- ========== GLOSSARY ========== -->
+<div class="card">
+<h3>GLOSSARY OF TERMS</h3>
+<div class="glossary">
+<p><strong>Plantilla Position</strong> &mdash; Authorized permanent position in staffing pattern</p>
+<p><strong>Eligibility</strong> &mdash; Civil Service qualification (e.g., CS Professional)</p>
+<p><strong>Qualification Standard</strong> &mdash; Required education, training, experience, eligibility</p>
+<p><strong>Permanent Appointment</strong> &mdash; Meets all standards, has security of tenure</p>
+<p><strong>Temporary Appointment</strong> &mdash; Meets standards except eligibility; max 1 year</p>
+<p><strong>Coterminous</strong> &mdash; Appointment ends when appointing official leaves</p>
+<p><strong>Substitute</strong> &mdash; Fills position temporarily vacated by regular employee on leave</p>
+<p><strong>Casual</strong> &mdash; Short duration, piece-work/daily wage, not regular functions</p>
+<p><strong>Contractual / COS / JO</strong> &mdash; No employer-employee relationship</p>
+<p><strong>Security of Tenure</strong> &mdash; Protected from removal except for lawful cause & due process</p>
+<p><strong>BAC</strong> &mdash; Bids and Awards Committee</p>
+<p><strong>HOPE</strong> &mdash; Head of the Procuring Entity</p>
+<p><strong>TWG</strong> &mdash; Technical Working Group</p>
+<p><strong>ABC</strong> &mdash; Approved Budget for the Contract</p>
+<p><strong>PhilGEPS</strong> &mdash; Philippine Government Electronic Procurement System</p>
+<p><strong>LCB</strong> &mdash; Lowest Calculated Bid</p>
+<p><strong>LCRB</strong> &mdash; Lowest Calculated Responsive Bid</p>
+<p><strong>HRB</strong> &mdash; Highest Rated Bid (for consulting services)</p>
+<p><strong>NOA</strong> &mdash; Notice of Award</p>
+<p><strong>DRRM</strong> &mdash; Disaster Risk Reduction & Management</p>
+<p><strong>NDRRMC</strong> &mdash; National DRRM Council</p>
+<p><strong>PHIVOLCS</strong> &mdash; monitors earthquakes, volcanoes, tsunamis</p>
+<p><strong>PAGASA</strong> &mdash; weather updates, typhoon warnings, flood advisories</p>
+<p><strong>ICS</strong> &mdash; Incident Command System (emergency response)</p>
+<p><strong>EWS</strong> &mdash; Early Warning System</p>
+<p><strong>RADaR</strong> &mdash; Rapid Assessment of Damages Report</p>
+<p><strong>MOOE</strong> &mdash; Maintenance and Other Operating Expenses</p>
+<p><strong>COA</strong> &mdash; Commission on Audit</p>
+<p><strong>DBM</strong> &mdash; Department of Budget and Management</p>
+<p><strong>CSC</strong> &mdash; Civil Service Commission</p>
+<p><strong>SDO</strong> &mdash; Schools Division Office</p>
+<p><strong>PSDS</strong> &mdash; Public Schools District Supervisor</p>
+<p><strong>SALN</strong> &mdash; Statement of Assets, Liabilities and Net Worth</p>
+<p><strong>PDS</strong> &mdash; Personal Data Sheet (CS Form 212)</p>
+<p><strong>DTR</strong> &mdash; Daily Time Record (CS Form 48)</p>
+<p><strong>Service Record</strong> &mdash; Chronological history of appointments, leaves, promotions</p>
+<p><strong>201 File</strong> &mdash; Employee's complete personnel records folder</p>
+<p><strong>PAR</strong> &mdash; Property Acknowledgement Receipt</p>
+<p><strong>ICS</strong> &mdash; Inventory Custodian Slip</p>
+<p><strong>RIS</strong> &mdash; Requisition and Issue Slip</p>
+<p><strong>IAR</strong> &mdash; Inspection and Acceptance Report</p>
+<p><strong>UACS</strong> &mdash; Unified Account Code Structure</p>
+<p><strong>INSET</strong> &mdash; In-Service Training</p>
+<p><strong>SIP / AIP</strong> &mdash; School Improvement Plan / Annual Implementation Plan</p>
+<p><strong>PPMP</strong> &mdash; Project Procurement Management Plan</p>
+<p><strong>PVP</strong> &mdash; Proportional Vacation Pay (for teachers)</p>
+<p><strong>PERA</strong> &mdash; Personal Economic Relief Allowance</p>
+<p><strong>IPCRF</strong> &mdash; Individual Performance Commitment and Review Form</p>
+</div>
+</div>
+
+<!-- ========== LESSON 1: ADMINISTRATIVE / RECORDS ========== -->
+<details class="lesson"><summary>Administrative / Records Management</summary>
+<p><b>Core Functions:</b> receiving, recording, classifying, routing, filing, retrieving, protecting, retaining and properly disposing of records.</p>
+<p><b>Accuracy Principle:</b> Always verify names, dates, figures, signatures, attachments and references before releasing documents.</p>
+<p><b>Confidentiality & Privacy:</b> Access only when authorized; follow <b>RA 10173 (Data Privacy Act)</b>. Classify records as: Public / Internal / Confidential / Restricted. Secure confidential records in locked cabinets or password-protected folders.</p>
+<p><b>Good Practices:</b></p>
+<ul>
+<li>Use tracking log / routing slip for all incoming/outgoing documents</li>
+<li>Clear and consistent file naming conventions</li>
+<li>Regular backups (digital and physical)</li>
+<li>Controlled access to records room</li>
+<li>Follow retention schedules and proper disposal authority</li>
+</ul>
+<p><b>Common Forms Used:</b></p>
+<ul>
+<li><b>Routing Slip</b> &mdash; tracks document movement between offices</li>
+<li><b>Transmittal</b> &mdash; forwards documents to another office with "THRU" line for chain of command</li>
+<li><b>Action Sheet</b> &mdash; assigns specific action to designated officer</li>
+<li><b>Records Disposition Schedule</b> &mdash; guides retention and disposal</li>
+<li><b>DTR (CS Form 48)</b> &mdash; Daily Time Record, official attendance</li>
+<li><b>Logbook</b> &mdash; records all incoming/outgoing communications</li>
+</ul>
+<p><b>DepEd School Forms:</b></p>
+<ul>
+<li><b>SF 1</b> &mdash; School Register</li>
+<li><b>SF 4</b> &mdash; Monthly Report of Attendance</li>
+<li><b>SF 7</b> &mdash; School Personnel Assignment List and Basic Profile</li>
+</ul>
+<p><b>Document Processing Rule (RA 6713):</b> Documents must require no more than <b>3 signatories</b> as far as practicable to reduce red tape.</p>
+</details>
+
+<!-- ========== LESSON 2: CIVIL SERVICE ========== -->
+<details class="lesson"><summary>Civil Service & Employment</summary>
+<p><b>Basic Principle:</b> <b>Merit and Fitness</b> is the fundamental principle in career service appointments (Constitution, Art. IX-B, Sec. 3).</p>
+<p><b>Employment Statuses:</b></p>
+<ul>
+<li><b>Permanent</b> &mdash; meets all qualification standards (education, training, experience, eligibility); has security of tenure</li>
+<li><b>Temporary</b> &mdash; meets all except eligibility; valid for not more than one (1) year</li>
+<li><b>Provisional</b> &mdash; issued when no eligible is available</li>
+<li><b>Coterminous</b> &mdash; ends with the term of the appointing official</li>
+<li><b>Fixed Term</b> &mdash; specific period stated in the appointment</li>
+<li><b>Substitute</b> &mdash; fills position of regular employee on extended leave</li>
+<li><b>Casual</b> &mdash; short duration, seasonal, piece-work basis</li>
+<li><b>Contractual / COS / JO</b> &mdash; no employer-employee relationship; not entitled to leave credits, 13th month pay, PERA, security of tenure</li>
+<li><b>Probationary</b> &mdash; 6-month trial period</li>
+</ul>
+<p><b>Key Distinctions:</b></p>
+<ul>
+<li><b>Appointment</b> &mdash; official act of designating someone to a position</li>
+<li><b>Position</b> &mdash; specific job with defined duties and salary grade</li>
+<li><b>Qualification Standard</b> &mdash; minimum requirements for the position</li>
+<li><b>Eligibility</b> &mdash; civil service qualification one must possess (e.g., CS Professional)</li>
+<li><b>Security of Tenure</b> &mdash; can only be removed for cause and after due process</li>
+<li><b>Plantilla of Personnel</b> &mdash; official list of authorized, funded regular positions</li>
+</ul>
+<p><b>Key Laws:</b></p>
+<ul>
+<li><b>RA 7305 / RA 11466</b> &mdash; Salary Standardization Laws</li>
+<li><b>RA 10524</b> &mdash; Magna Carta of PWDs; mandates 1% employment quota in government</li>
+<li><b>RA 11313</b> &mdash; Safe Spaces Act; workplace safety & respect</li>
+<li><b>EO 64, s.2024</b> &mdash; updates salary schedule in 4 tranches</li>
+</ul>
+</details>
+
+<!-- ========== LESSON 3: LEAVE RULES ========== -->
+<details class="lesson"><summary>Omnibus Rules on Leave</summary>
+<p>Found in <b>CSC MC No. 41, s. 1998</b> as amended by <b>CSC MC No. 6, s. 2020</b>.</p>
+<p><b>Standard Leave Credits:</b> <b>1.25 days VL + 1.25 days SL per month</b> of actual service = 15 days VL + 15 days SL per year.</p>
+<p><b>No Leave Credits Earned When:</b> On Leave Without Pay (LWOP) for an entire month.</p>
+<p><b>Major Leave Types:</b></p>
+<ul>
+<li><b>Vacation Leave (VL)</b> &mdash; must be applied at least <b>5 days in advance</b>; subject to "necessities of the service"</li>
+<li><b>Sick Leave (SL)</b> &mdash; for illness; >5 consecutive days requires <b>Medical Certificate</b></li>
+<li><b>Maternity Leave (RA 11210)</b> &mdash; <b>105 days</b> full pay (live birth); <b>60 days</b> full pay (miscarriage/termination). Solo parents get +15 days. Can allocate up to 7 days to the father.</li>
+<li><b>Paternity Leave (RA 8187)</b> &mdash; <b>7 days</b> full pay per delivery; max 4 children; <b>married male employees only</b></li>
+<li><b>Solo Parent Leave (RA 8972/RA 11861)</b> &mdash; <b>7 days</b> per year; after at least <b>6 months</b> service</li>
+<li><b>VAWC Leave (RA 9262)</b> &mdash; <b>10 days</b> paid leave for victims of violence</li>
+<li><b>Special Leave Benefit for Women (RA 9710)</b> &mdash; up to <b>2 months</b> full pay for gynecological surgery</li>
+<li><b>Special Privilege Leave (SPL)</b> &mdash; <b>3 days</b> per year; <b>non-cumulative</b>, non-commutative</li>
+<li><b>Study Leave</b> &mdash; up to 6 months; requires at least <b>2 years</b> continuous service with VS performance</li>
+<li><b>Rehabilitation Leave</b> &mdash; for work-related injuries; max <b>6 months</b> full pay</li>
+<li><b>Relocation/Transfer Leave</b> &mdash; when transferring residence due to reassignment</li>
+<li><b>Mandatory/Forced Leave</b> &mdash; <b>5 days</b> per year required for employees with 10+ days VL credits</li>
+</ul>
+<p><b>Teachers' Special Case:</b> Instead of VL/SL credits, teachers receive <b>Proportional Vacation Pay (PVP)</b> during summer and Christmas breaks. Services rendered during vacation earn <b>Service Credits</b> to offset absences.</p>
+<p><b>Terminal Leave:</b> Unused leave credits may be monetized/commuted upon separation or retirement.</p>
+<p><b>Monetization:</b> Option to convert excess VL/SL credits to cash in times of emergency, subject to DBM approval.</p>
+<p><b>AWOL / Habitual Absenteeism:</b> Continuous unauthorized absence of <b>30 working days or more</b> = dropped from the rolls.</p>
+</details>
+
+<!-- ========== LESSON 4: GRAMMAR ========== -->
+<details class="lesson"><summary>Grammar &mdash; Error Recognition Rules</summary>
+<p><b>Subject-Verb Agreement:</b></p>
+<ul>
+<li><b>Singular subjects</b> &rarr; singular verbs: Each, Every, Everyone, Nobody, One of, titles, measurements, money, time, diseases, subjects (Physics, Math, Measles)</li>
+<li><b>A number of</b> = PLURAL; <b>The number of</b> = SINGULAR</li>
+<li><b>Neither&hellip;nor / Either&hellip;or</b> &rarr; verb agrees with the <b>nearest subject</b></li>
+<li><b>Collective nouns</b> (committee, jury): singular as a unit; plural as individuals</li>
+<li><b>Police</b>, <b>cattle</b> = always PLURAL</li>
+<li><b>Intervening phrases</b> (along with, together with, as well as) do NOT change the subject number</li>
+<li><b>More than one</b> = SINGULAR verb</li>
+<li><b>Bread and butter</b> (one unit) = SINGULAR; <b>Hard work and perseverance</b> (two qualities) = PLURAL</li>
+</ul>
+<p><b>Prepositions & Idioms:</b></p>
+<ul>
+<li>similar <b>TO</b>, senior <b>TO</b>, junior <b>TO</b>, preferable <b>TO</b></li>
+<li>capable <b>OF</b>, responsible <b>FOR</b>, good <b>AT</b>, afraid <b>OF</b></li>
+<li>interested <b>IN</b>, based <b>ON</b>, concerned <b>ABOUT/WITH</b></li>
+<li><b>DESPITE</b> = NO "of" (use "In spite of" with "of")</li>
+<li><b>Look forward TO + -ing</b> (to = preposition, not infinitive marker)</li>
+<li><b>Accustomed TO + -ing</b></li>
+</ul>
+<p><b>Common Errors:</b></p>
+<ul>
+<li><b>Redundancy:</b> Return back &rarr; Return; Supposing if &rarr; If/Supposing; Advance planning &rarr; Planning</li>
+<li><b>Subjunctive:</b> If I <b>WERE</b> (not was) for wishes/hypotheticals</li>
+<li><b>Double comparison:</b> NEVER "most smartest" &rarr; "smartest" only</li>
+<li><b>Unless:</b> already negative &rarr; DO NOT add "do not"</li>
+<li><b>Parallelism:</b> same form in lists (reading, writing, swimming &mdash; NOT to swim)</li>
+<li><b>Pronoun case:</b> Between you and <b>me</b> (not I); object of preposition needs object pronoun</li>
+<li><b>Split infinitive:</b> "to carefully read" &mdash; better: "to read carefully"</li>
+<li><b>Adverb vs Adjective:</b> walked <b>slowly</b> (not slow); explained <b>clearly</b> (not clear)</li>
+<li><b>Indirect speech tense shift:</b> "will" &rarr; "would" when reporting verb is in past tense</li>
+<li><b>Data</b> = plural (datum = singular); but often accepted as singular mass noun now</li>
+</ul>
+<p><b>Discrepancy rule:</b> When words vs figures differ in amount, the amount in <b>words</b> prevails.</li>
+</ul>
+</details>
+
+<!-- ========== LESSON 5: VERBAL ABILITY ========== -->
+<details class="lesson"><summary>Verbal Ability</summary>
+<p><b>Components tested:</b> Word meaning / synonyms / antonyms, sentence completion, correct usage, paragraph organization, reading comprehension.</p>
+<p><b>Tips for Word Meaning:</b> Look for context clues in the sentence. Break down words into roots, prefixes, suffixes.</p>
+<p><b>Common Prefixes:</b></p>
+<ul>
+<li><b>pre-</b> = before (preview, predict)</li>
+<li><b>post-</b> = after (postpone, postgraduate)</li>
+<li><b>re-</b> = again (review, return)</li>
+<li><b>un- / dis- / in- / im-</b> = not (unfair, disagree, inactive, improper)</li>
+<li><b>mis-</b> = wrong (misunderstand, misplace)</li>
+<li><b>inter-</b> = between (interact, international)</li>
+<li><b>trans-</b> = across (transfer, transport)</li>
+</ul>
+<p><b>Sentence Completion Tips:</b> Read the entire sentence first; identify the logical relationship (cause-effect, contrast, similarity); choose the word that makes the sentence complete and logical.</p>
+<p><b>Paragraph Organization:</b> Look for the <b>topic sentence</b> first (usually introduces the main idea). Then find supporting sentences that follow logically. Transition words (however, therefore, moreover, in addition, finally) help identify the sequence.</p>
+<p><b>Reading Comprehension Tips:</b></p>
+<ul>
+<li>Read the questions first, then read the passage</li>
+<li>Identify the main idea vs. supporting details</li>
+<li>Answers are usually in the text &mdash; avoid over-speculating</li>
+<li>Choose the most precise and formal expression suitable for government writing</li>
+</ul>
+</details>
+
+<!-- ========== LESSON 6: ETHICS RA 6713 ========== -->
+<details class="lesson"><summary>Ethics / RA 6713 &mdash; Code of Conduct</summary>
+<p><b>Core Principle:</b> "Public office is a public trust."</p>
+<p><b>8 Norms of Conduct:</b></p>
+<ol>
+<li><b>Commitment to Public Interest</b> &mdash; Always prioritize public interest over personal; use government resources efficiently, honestly, economically</li>
+<li><b>Professionalism</b> &mdash; Highest degree of excellence, intelligence, skill, dedication</li>
+<li><b>Justness and Sincerity</b> &mdash; Fair to all, no discrimination, no undue favors to relatives</li>
+<li><b>Political Neutrality</b> &mdash; Service independent of party affiliation or politics</li>
+<li><b>Responsiveness to the Public</b> &mdash; Prompt, courteous, adequate service; reduce red tape</li>
+<li><b>Nationalism and Patriotism</b> &mdash; Loyalty to Republic; pride in local resources</li>
+<li><b>Commitment to Democracy</b> &mdash; Uphold Constitution; civilian supremacy; public accountability</li>
+<li><b>Simple Living</b> &mdash; Modest lives; no extravagant/ostentatious displays of wealth</li>
+</ol>
+<p><b>Prohibited Acts and Transactions:</b></p>
+<ul>
+<li><b>Financial/Material Interest:</b> Cannot have interest in any transaction requiring approval of their office</li>
+<li><b>Outside Employment/Private Practice:</b> Cannot own/control/manage/accept employment in private enterprise regulated by their office</li>
+<li><b>Solicitation/Acceptance of Gifts:</b> Prohibited from soliciting or accepting gifts, gratuities, favors of monetary value in connection with official duties. Exception: nominal/insignificant tokens during traditional celebrations without strings attached.</li>
+<li><b>Misuse of Confidential Information:</b> Cannot use or divulge confidential info for private advantage</li>
+<li><b>Post-Employment Restriction:</b> <b>1 year ban</b> after leaving service &mdash; cannot practice profession on matters they acted upon, nor represent private entities before their former office</li>
+<li><b>Nepotism/Conflict of Interest:</b> Disclose relationships and inhibit from processes involving relatives</li>
+</ul>
+<p><b>Mandatory Duties & Deadlines:</b></p>
+<ul>
+<li><b>Respond to letters/requests:</b> Within <b>15 working days</b> from receipt. If cannot resolve, send acknowledgment explaining delay and expected completion date.</li>
+<li><b>Max 3 signatories</b> per document to reduce red tape</li>
+<li><b>Frontline service:</b> Attend promptly to anyone availing of services, even if it extends slightly beyond closing time</li>
+</ul>
+<p><b>SALN Requirements:</b></p>
+<ul>
+<li>All public officials/employees must file (except laborers and casual/temporary workers)</li>
+<li><b>Within 30 days</b> after assumption of office</li>
+<li><b>On or before April 30</b> every year thereafter</li>
+<li><b>Within 30 days</b> after separation from service</li>
+<li>Must declare: real properties, personal properties, liabilities, business interests and financial connections</li>
+</ul>
+<p><b>Penalties:</b> Administrative (fines, suspension up to <b>1 year</b>, dismissal); Criminal (up to <b>5 years</b> imprisonment, disqualification from public office).</p>
+<p><b>Awards:</b> CSC administers Lingkod Bayan / Dangal ng Bayan awards for exemplary service.</p>
+</details>
+
+<!-- ========== LESSON 7: PROCUREMENT ========== -->
+<details class="lesson"><summary>Government Procurement (RA 9184 & RA 12009)</summary>
+<p><b>RA 9184</b> = OLD Government Procurement Reform Act of 2003<br><b>RA 12009</b> = NEW Government Procurement Act of 2024 &mdash; <b>CURRENT MAIN LAW</b></p>
+<p><b>Principles:</b> transparency, competitiveness, efficiency, proportionality, accountability, participatory, sustainability, professionalism.</p>
+<p><b>Key Bodies:</b></p>
+<ul>
+<li><b>BAC</b> (Bids and Awards Committee) &mdash; 5 to 7 members; appointed by <b>HOPE</b>; term = <b>1 year renewable</b></li>
+<li><b>HOPE</b> (Head of the Procuring Entity) &mdash; appoints BAC; issues Notice of Award; <b>CANNOT</b> be a BAC member</li>
+<li><b>TWG</b> (Technical Working Group) &mdash; created by BAC; assists in eligibility screening, bid evaluation, post-qualification</li>
+<li><b>BAC Secretariat</b> &mdash; administrative support; headed by permanent official designated by HOPE</li>
+<li><b>PhilGEPS</b> &mdash; Philippine Government Electronic Procurement System; central electronic portal</li>
+</ul>
+<p><b>Observers:</b> At least <b>3</b> (1 from COA, 2 from private sector/NGOs). Must be invited at least <b>5 calendar days</b> before procurement activity. If they fail to attend despite notice, BAC can proceed.</p>
+<p><b>Jury Duty Principle:</b> BAC/TWG/Secretariat members must give utmost priority to procurement assignments over all other duties until completed.</p>
+<p><b>Quorum:</b> Majority of all BAC members, with Chair or Vice-Chair present.</p>
+<p><b>Pre-Bid Conference:</b> Mandatory if ABC &ge; <b>&peso;1,000,000</b> for Goods.</p>
+<p><b>Bid Evaluation:</b></p>
+<ul>
+<li><b>Goods & Infrastructure:</b> determine <b>LCB</b> (Lowest Calculated Bid)</li>
+<li><b>Consulting Services:</b> determine <b>HRB</b> (Highest Rated Bid) &mdash; technical expertise over lowest cost</li>
+<li>Bids exceeding ABC are <b>automatically disqualified</b></li>
+<li>Words vs figures discrepancy: <b>amount in words prevails</b></li>
+</ul>
+<p><b>Post-Qualification:</b> After determining LCB, BAC verifies all statements. If passed, declared as <b>LCRB</b> (Lowest Calculated Responsive Bid).</p>
+<p><b>Single Calculated and Responsive Bid (SCRB):</b> When only one bidder submits and passes all criteria, award can be recommended.</p>
+<p><b>Failure of Bidding:</b> When no bids received; or all bids fail to comply; or winning bidder refuses award.</p>
+<p><b>After 2 consecutive failed biddings:</b> May recommend <b>Negotiated Procurement</b>.</p>
+<p><b>Performance Security:</b> Winning bidder must post before contract signing to guarantee faithful performance.</p>
+<p><b>Blacklisting:</b> Administrative penalty prohibiting from all government procurement activities. BAC recommends; HOPE approves.</p>
+<p><b>Conflict of Interest:</b> Chief Accountant or personnel who approve vouchers <b>cannot</b> be regular BAC members.</p>
+<p><b>RA 12009 New Features:</b> Stronger digitalization mandate, video recording of proceedings, open contracting data, fit-for-purpose, strategic procurement planning, market scoping, lifecycle cost.</p>
+</details>
+
+<!-- ========== LESSON 8: COMPUTER / OFFICE SKILLS ========== -->
+<details class="lesson"><summary>Computer / Office Skills</summary>
+<p><b>Microsoft Excel Essentials:</b></p>
+<ul>
+<li>All formulas begin with <b>=</b> (equal sign)</li>
+<li><b>=SUM(range)</b> &mdash; adds values</li>
+<li><b>=AVERAGE(range)</b> &mdash; finds average</li>
+<li><b>=COUNT(range)</b> &mdash; counts numeric cells</li>
+<li><b>=COUNTA(range)</b> &mdash; counts non-empty cells</li>
+<li><b>=COUNTIF(range, criteria)</b> &mdash; counts cells matching criteria</li>
+<li><b>=SUMIF(range, criteria, sum_range)</b> &mdash; sums cells matching criteria</li>
+<li><b>=VLOOKUP(value, table, col_index, FALSE)</b> &mdash; looks up value in table</li>
+<li><b>=IF(logical_test, value_if_true, value_if_false)</b> &mdash; conditional logic</li>
+<li><b>=CONCATENATE()</b> or <b>&</b> &mdash; joins text strings</li>
+<li><b>=NOW()</b> &mdash; current date and time</li>
+<li><b>=ROUND(number, 2)</b> &mdash; rounds to 2 decimal places</li>
+<li><b>$A$1</b> &mdash; absolute cell reference (doesn't change when copied)</li>
+<li><b>### error</b> &mdash; column too narrow; widen it</li>
+</ul>
+<p><b>Useful Excel Features:</b></p>
+<ul>
+<li><b>Conditional Formatting</b> &mdash; highlight cells based on criteria (e.g., expenses > 50K in red)</li>
+<li><b>Data Validation</b> &mdash; restrict what can be entered in a cell</li>
+<li><b>Freeze Panes</b> &mdash; keep headers visible while scrolling</li>
+<li><b>AutoFilter / Sort</b> &mdash; organize and filter data</li>
+<li><b>Pivot Table</b> &mdash; summarize large datasets quickly</li>
+<li><b>Format Painter</b> &mdash; copy formatting to other cells</li>
+</ul>
+<p><b>Keyboard Shortcuts:</b></p>
+<ul>
+<li><b>Ctrl + Z</b> &mdash; Undo</li>
+<li><b>Ctrl + C / V / X</b> &mdash; Copy / Paste / Cut</li>
+<li><b>Ctrl + Shift + Down Arrow</b> &mdash; select entire column to last active cell</li>
+</ul>
+<p><b>MS Word Skills:</b> Formatting, mail merge, proper layout, tables, styles, headers/footers, page numbering.</p>
+<p><b>Computer Security:</b></p>
+<ul>
+<li>Strong passwords; never share credentials</li>
+<li>Backups in separate location</li>
+<li>Phishing awareness &mdash; verify senders, don't click suspicious links</li>
+<li>Verify attachments before opening</li>
+<li>Lock computer when leaving workstation</li>
+</ul>
+<p><b>Email Etiquette:</b> Clear and specific subject line; correct recipient; check attachments before sending; professional tone; proper greeting and closing.</p>
+<p><b>File Management:</b> Consistent naming convention; logical folder structure; version control; retention and disposal rules per policy.</p>
+</details>
+
+<!-- ========== LESSON 9: DRRM ========== -->
+<details class="lesson"><summary>DRRM &mdash; Disaster Risk Reduction & Management</summary>
+<p><b>Key Law:</b> <b>RA 10121</b> &mdash; Philippine Disaster Risk Reduction and Management Act of 2010.</p>
+<p><b>DepEd Order:</b> <b>DepEd Order No. 37, s. 2015</b> &mdash; institutionalized Comprehensive DRRM in Education Framework.</p>
+<p><b>Key DepEd Office:</b> <b>DRRMS</b> &mdash; Disaster Risk Reduction and Management Service.</p>
+<p><b>4 Thematic Areas (RA 10121):</b></p>
+<ol>
+<li><b>Disaster Prevention and Mitigation</b> &mdash; avoid hazards; reduce impact</li>
+<li><b>Disaster Preparedness</b> &mdash; planning, training, early warning</li>
+<li><b>Disaster Response</b> &mdash; during and immediately after; rescue, relief</li>
+<li><b>Rehabilitation and Recovery</b> &mdash; restore and improve; "Build Back Better"</li>
+</ol>
+<p><b>Disaster Risk Formula:</b> <b>Risk = (Hazard &times; Vulnerability) / Capacity</b></p>
+<p><b>Key Terms:</b></p>
+<ul>
+<li><b>Hazard</b> &mdash; potential harmful event (typhoon, earthquake, fire)</li>
+<li><b>Vulnerability</b> &mdash; characteristics making community susceptible to damage</li>
+<li><b>Capacity</b> &mdash; strengths, attributes, resources to manage/reduce risk</li>
+<li><b>Exposure</b> &mdash; presence of people/assets in hazard zones</li>
+<li><b>Resilience</b> &mdash; ability to resist, absorb, adapt, and transform</li>
+</ul>
+<p><b>Hazard Types:</b></p>
+<ul>
+<li><b>Natural Geological</b> &mdash; earthquakes, volcanic eruptions, landslides</li>
+<li><b>Hydrometeorological</b> &mdash; typhoons, floods, droughts (from atmospheric/hydrological/oceanographic processes)</li>
+<li><b>Biological</b> &mdash; epidemics, pest infestations</li>
+<li><b>Human-induced / Anthropogenic</b> &mdash; industrial accidents, structural fires, chemical spills</li>
+</ul>
+<p><b>3 Pillars of Comprehensive Safe School Framework:</b></p>
+<ol>
+<li><b>Safe Learning Facilities</b> (structural safety)</li>
+<li><b>School Disaster Management</b> (policies, plans, drills)</li>
+<li><b>Risk Reduction / Resilience Education</b> (curriculum integration)</li>
+</ol>
+<p><b>Key Agencies:</b></p>
+<ul>
+<li><b>PHIVOLCS</b> &mdash; monitors earthquakes, volcanic activities, tsunamis</li>
+<li><b>PAGASA</b> &mdash; weather updates, typhoon warnings, flood advisories</li>
+<li><b>NDRRMC</b> &mdash; National DRRM Council</li>
+<li><b>OCD</b> &mdash; Office of Civil Defense</li>
+</ul>
+<p><b>School Drills:</b> Earthquake and fire drills must be conducted <b>quarterly</b> (every 3 months).</p>
+<p><b>Earthquake Drill Action:</b> <b>Duck, Cover, and Hold</b>.</p>
+<p><b>Fire Triangle:</b> <b>Oxygen, Fuel, Heat</b>. Clothes on fire: <b>Stop, Drop, and Roll</b>.</p>
+<p><b>RADaR:</b> Rapid Assessment of Damages Report &mdash; must be submitted within <b>24 to 72 hours</b> after hazard event.</p>
+<p><b>Schools as Evacuation Centers:</b> Only as <b>last resort</b>. Maximum of <b>15 days</b> to avoid prolonged class disruption.</p>
+<p><b>Incident Command System (ICS):</b> Standardized emergency management structure. <b>Incident Commander</b> has overall tactical authority.</p>
+<p><b>Class Suspensions:</b> Based on PAGASA storm warning signals per <b>EO 66, s. 2012</b>.</p>
+<p><b>Global Framework:</b> <b>Sendai Framework for DRR (2015-2030)</b> &mdash; replaced Hyogo Framework.</p>
+<p><b>Priority during emergency:</b> <b>LIFE SAFETY FIRST</b>; then secure critical records and assets; communicate verified information only; document everything.</p>
+</details>
+
+<!-- ========== LESSON 10: EO 64 ========== -->
+<details class="lesson"><summary>EO 64, s. 2024 &mdash; Salary Update</summary>
+<p><b>Official Title:</b> "Updating the Salary Schedule for Civilian Government Personnel and Authorizing the Grant of an Additional Allowance, and for Other Purposes."</p>
+<p><b>Signed:</b> <b>August 2, 2024</b> by Executive Secretary Lucas P. Bersamin, by authority of President Ferdinand R. Marcos Jr.</p>
+<p><b>Implementation:</b> <b>4 tranches</b> from FY 2024 to 2027:</p>
+<ul>
+<li><b>Tranche 1:</b> January 1, 2024 (retroactive)</li>
+<li><b>Tranche 2:</b> January 1, 2025</li>
+<li><b>Tranche 3:</b> <b>January 1, 2026</b></li>
+<li><b>Tranche 4:</b> January 1, 2027</li>
+</ul>
+<p><b>Medical Allowance:</b> Up to <b>&peso;7,000 per annum</b> (yearly, NOT monthly). Primarily for HMO services. Can be given as HMO coverage OR cash (for those who pay/renew their own). DBM Budget Circular No. 2024-6 provides the rules.</p>
+<p><b>COVERED:</b> Regular / permanent / contractual with employer-employee relationship; civilian government personnel only; NGAs, LGUs, Constitutional Commissions.</p>
+<p><b>NOT COVERED:</b> <b>Military and uniformed personnel</b> (separate system); <b>Job Order (JO) / Contract of Service (COS)</b> workers (no employer-employee relationship).</p>
+<p><b>LGU Implementation:</b> Must comply with Personnel Services (PS) limitation under <b>RA 7160</b> (Local Government Code). <b>Sanggunian</b> determines grant of Medical Allowance based on financial capability. DBM Local Budget Circular No. 160 provides guidelines.</p>
+<p><b>Salary Adjustment Rules:</b></p>
+<ul>
+<li>New hires start at <b>Step 1</b> of the salary grade</li>
+<li>Daily wage rate for casual: monthly rate &divide; <b>22 workdays</b></li>
+<li>If current salary exceeds new Step 8: adjusted to Step 8 rate; if still exceeds, <b>no salary increase</b> entitled</li>
+<li>Compulsory retirees with extended service: <b>entitled</b> to the increase</li>
+</ul>
+<p><b>Funding Source:</b> General Appropriations Act (GAA) for NGAs.</p>
+<p><b>Effective upon publication</b> in Official Gazette or newspaper of general circulation.</p>
+</details>
+
+<!-- ========== LESSON 11: SITUATIONAL JUDGMENT ========== -->
+<details class="lesson"><summary>Situational Judgment</summary>
+<p><b>Decision Framework:</b> Choose actions that are: <b>Lawful &rarr; Ethical &rarr; Documented &rarr; Fair &rarr; Within Authority &rarr; Appropriate to Urgency</b>.</p>
+<p><b>When unsure:</b> <b>Check official rule &rarr; Ask proper authority &rarr; Do not guess.</b></p>
+<p><b>Common Scenarios & Correct Responses:</b></p>
+<ul>
+<li><b>Confidential document request:</b> Decline unauthorized requests; explain the rule (RA 10173 / Data Privacy)</li>
+<li><b>Supervisor asks for rule violation:</b> Politely ask clarification; if certain it violates, explain regulation professionally; offer proper alternative; follow established channels if needed</li>
+<li><b>Error found in submitted report:</b> Notify proper authority; correct it; accountability and transparency required</li>
+<li><b>Heavy workload / tight deadlines:</b> List all tasks; prioritize by urgency and importance; use checklist; communicate early with supervisor if overwhelmed</li>
+<li><b>Conflict of interest (relative bidding):</b> Disclose relationship; inhibit from the evaluation process</li>
+<li><b>Gift offered by supplier:</b> Politely refuse; accepting gifts of value connected to official duties is prohibited by RA 6713</li>
+<li><b>Discovered colleague stealing supplies:</b> Report through proper channels; upholding public interest and trust is required</li>
+<li><b>Client arrives just before closing:</b> Attend to them promptly; frontline duty requires service even if it extends slightly past closing</li>
+<li><b>Request cannot be resolved in 15 days:</b> Send acknowledgment letter explaining delay, current status, and expected completion date</li>
+</ul>
+<p><b>Common Traps to Avoid:</b></p>
+<ul>
+<li>Following unauthorized instructions without verifying</li>
+<li>Skipping rules or procedures for "expediency"</li>
+<li>Favoritism or giving undue advantage</li>
+<li>Taking shortcuts that compromise accountability</li>
+<li>Blaming others instead of taking responsibility</li>
+<li>Ignoring problems hoping they'll go away</li>
+</ul>
+</details>
+
+<!-- ========== LESSON 12: DEPED COMPLIANCE ========== -->
+<details class="lesson"><summary>DepEd Compliance & Protocols</summary>
+<p><b>Key Law:</b> <b>RA 9155</b> &mdash; Governance of Basic Education Act of 2001. The school level is the "heart of the formal education system."</p>
+<p><b>DepEd Core Values:</b> Maka-Diyos, Makatao, Makakalikasan, <b>Makabansa</b>. (Makasarili is NOT a core value.)</p>
+<p><b>Key Personnel Documents:</b></p>
+<ul>
+<li><b>201 File</b> &mdash; Employee's complete personnel records (appointments, clearances, diplomas, SALN, etc.)</li>
+<li><b>Service Record</b> &mdash; Continuous chronological history of appointments, promotions, leaves, salary steps</li>
+<li><b>PDS (CS Form 212)</b> &mdash; Personal Data Sheet; official profile updated regularly</li>
+<li><b>DTR (CS Form 48)</b> &mdash; Daily Time Record; official attendance</li>
+<li><b>SALN</b> &mdash; Statement of Assets, Liabilities and Net Worth</li>
+<li><b>IPCRF</b> &mdash; Individual Performance Commitment and Review Form (non-teaching performance evaluation)</li>
+</ul>
+<p><b>Property Management:</b></p>
+<ul>
+<li><b>PAR</b> (Property Acknowledgement Receipt) &mdash; for high-value items with life expectancy > 1 year</li>
+<li><b>ICS</b> (Inventory Custodian Slip) &mdash; for semi-expendable items below capitalization threshold</li>
+<li><b>RIS</b> (Requisition and Issue Slip) &mdash; tracks distribution of supplies</li>
+<li><b>IAR</b> (Inspection and Acceptance Report) &mdash; verifies delivery quality and quantity</li>
+<li><b>Delivery Receipt (DR)</b> &mdash; supplier's document listing items delivered</li>
+<li><b>Waste Material Report</b> &mdash; removes worn-out/obsolete items from records</li>
+<li><b>Notice of Loss</b> &mdash; filed within <b>30 days</b> for items lost due to calamity</li>
+<li><b>Physical Inventory</b> &mdash; regular check of physical presence vs book records</li>
+</ul>
+<p><b>Financial Guidelines (MOOE):</b></p>
+<ul>
+<li><b>MOOE</b> &mdash; Maintenance and Other Operating Expenses</li>
+<li><b>COA</b> &mdash; Commission on Audit audits all transactions</li>
+<li><b>Liquidation Report</b> &mdash; proves cash advances were spent properly</li>
+<li><b>No new cash advance</b> unless previous is fully liquidated</li>
+<li><b>Official Receipt (OR)</b> &mdash; primary valid proof of payment recognized by COA</li>
+<li>Travel cash advance must be liquidated within <b>10 days</b> after return</li>
+<li>Unutilized/Unliquidated balance may <b>revert to National Treasury</b></li>
+<li><b>PPMP</b> &mdash; Project Procurement Management Plan (itemized procurement needs)</li>
+<li><b>SIP / AIP</b> &mdash; School Improvement Plan / Annual Implementation Plan (foundation for procurement)</li>
+</ul>
+<p><b>Allowable MOOE Expenses:</b> Classroom supplies, utilities (water/electricity), minor repairs, training materials, communication expenses.</p>
+<p><b>NOT Allowable:</b> Personal vacations, regular teacher salaries, major infrastructure construction.</p>
+<p><b>Channel of Communication:</b> School level issues &rarr; report first to <b>School Head / Principal</b> &rarr; then PSDS &rarr; then SDO.</p>
+<p><b>Transmittal Memorandum:</b> Uses "THRU" line to respect chain of command (e.g., THRU: PSDS).</p>
+<p><b>Data Privacy (RA 10173):</b> Secure 201 files in locked cabinets; controlled digital access; no sharing without consent.</p>
+</details>
+
+<!-- ========== LESSON 13: DOCUMENT DRAFTING ========== -->
+<details class="lesson"><summary>Document & Memorandum Drafting</summary>
+<p><b>Standard DepEd Memorandum Format:</b></p>
+<ul>
+<li><b>Letterhead:</b> Republic of the Philippines, Department of Education, Region, Division/School name, address</li>
+<li><b>Document Type:</b> DIVISION MEMORANDUM / SCHOOL MEMORANDUM / OFFICE ORDER</li>
+<li><b>Series Number:</b> No. ___, s. 2026 ("s." = series)</li>
+<li><b>TO:</b> Target recipients in hierarchical order</li>
+<li><b>FROM:</b> Signatory official and position</li>
+<li><b>THRU:</b> For transmittals up the chain (e.g., THRU: PSDS)</li>
+<li><b>SUBJECT:</b> One concise line summarizing purpose</li>
+<li><b>DATE:</b> Current date</li>
+<li><b>Body:</b> Numbered paragraphs; purpose first, then details, then enclosure list</li>
+<li><b>Signature Block:</b> At the very end; approving authority signs</li>
+</ul>
+<p><b>Key Document Types:</b></p>
+<ul>
+<li><b>Memorandum</b> &mdash; internal communication; policies, announcements, meetings</li>
+<li><b>Transmittal Letter/Memo</b> &mdash; forwards documents; has "THRU" line; lists enclosures; has "Received By" section</li>
+<li><b>Minutes of the Meeting</b> &mdash; objective, third person; names speakers and responses; includes agenda, attendance, discussions, decisions, adjournment</li>
+<li><b>Request Letter</b> &mdash; formal, courteous; states exact event, objective, timeline, fund source, attachments</li>
+<li><b>Incident Report</b> &mdash; facts only (Who, What, When, Where, Why); chronological; no emotional language; declares status/outcome</li>
+<li><b>Notice of Meeting</b> &mdash; includes date, time, venue, and numbered agenda</li>
+</ul>
+<p><b>Writing Principles:</b></p>
+<ul>
+<li>Clear, concise, objective, professional tone</li>
+<li>Active voice preferred; third person for minutes/reports</li>
+<li>Clean sans-serif or serif fonts (Arial, Calibri, Times New Roman)</li>
+<li>Specific complete dates ("June 29, 2026" not "next week")</li>
+<li>Numbered lists for multi-step instructions</li>
+<li>Attachments referenced as "Enclosure" or "Annex"</li>
+<li>OIC signing: sign own name over "For" or "OIC" above the title</li>
+<li>Always proofread before printing/submitting</li>
+<li>Archive signed original securely; keep digital backup</li>
+</ul>
+<p><b>Routing Slip:</b> Best practice to track document movement for multiple signatures.</p>
+<p><b>"Immediate dissemination and strict compliance is desired"</b> = share right away and follow without exception.</p>
+</details>
+
+<!-- ========== LESSON 14: SPREADSHEET & FINANCIAL ========== -->
+<details class="lesson"><summary>Spreadsheet & Financial Computation</summary>
+<p><b>Advanced Excel Formulas:</b></p>
+<ul>
+<li><b>=SUMIF(range, criteria, sum_range)</b> &mdash; sums values that meet a condition (e.g., total only "Office Supplies")</li>
+<li><b>=IF(logical, true, false)</b> &mdash; conditional (e.g., =IF(D10>C10, "OVER BUDGET", "WITHIN BUDGET"))</li>
+<li><b>=IF(AND(cond1, cond2), true, false)</b> &mdash; both conditions must be true</li>
+<li><b>=VLOOKUP(TRIM(A2), range, col, FALSE)</b> &mdash; fixes trailing spaces issue</li>
+<li><b>=ROUND(formula, 2)</b> &mdash; forces value to 2 decimal places (centavo precision)</li>
+<li><b>Sheet reference:</b> =January!G15 + February!G15 (references other worksheets)</li>
+<li><b>Text joining:</b> =B2&", "&A2 or =CONCATENATE(B2, ", ", A2)</li>
+</ul>
+<p><b>Payroll Computations:</b></p>
+<ul>
+<li><b>Daily wage rate</b> = Monthly salary &divide; <b>22 working days</b></li>
+<li><b>GSIS Personal Share</b> = Basic salary &times; <b>9%</b></li>
+<li><b>GSIS Government Share</b> = Basic salary &times; <b>12%</b></li>
+<li><b>Taxable Income</b> = Gross income &minus; Mandatory non-taxable deductions (GSIS, PhilHealth, Pag-IBIG)</li>
+<li><b>Prorated PERA</b> = (PERA &divide; 22) &times; Days actually worked</li>
+<li><b>Salary deduction for absences</b> = Days absent &times; Daily wage rate</li>
+</ul>
+<p><b>MOOE & Liquidation:</b></p>
+<ul>
+<li><b>Unliquidated balance</b> = Cash advance received &minus; Total valid liquidated expenses</li>
+<li><b>Utilization rate (%)</b> = (Actual disbursement &divide; Cash allocation) &times; 100</li>
+<li>Government expects utilization between <b>90% and 100%</b> per quarter</li>
+</ul>
+<p><b>Withholding Tax Computations (VAT):</b></p>
+<ul>
+<li><b>Net of VAT Base</b> = Gross amount &divide; 1.12</li>
+<li><b>5% Final VAT Withholding</b> = Net of VAT Base &times; 0.05</li>
+<li><b>1% Expanded Withholding Tax (EWT)</b> = Net of VAT Base &times; 0.01</li>
+<li><b>Net Payable to Supplier</b> = Gross amount &minus; 5% VAT &minus; 1% EWT</li>
+</ul>
+<p><b>Budget Computations:</b></p>
+<ul>
+<li><b>Budget cap</b> = Total budget &times; Allowed percentage (e.g., 15% for janitorial/security)</li>
+<li><b>Electricity cost</b> = (Current reading &minus; Previous reading) &times; Rate per kWh</li>
+</ul>
+<p><b>Financial Reporting Tools:</b></p>
+<ul>
+<li><b>Pivot Table</b> &mdash; best for summarizing 2,000+ row ledgers by Object Code</li>
+<li><b>ROUND function</b> &mdash; ensures centavo accuracy (not just visual formatting)</li>
+</ul>
+<p><b>UACS:</b> Unified Account Code Structure &mdash; standard government coding for classifying accounts, revenues, and expenditures uniformly.</p>
+</details>
+
+</section>
+<!-- ========== END OF LESSONS SECTION ========== -->
+
+<!-- ========== PART 1 END ========== -->
+
+<!-- ========== PART 2 START ========== -->
+
+<!-- ========== EXAM SECTION ========== -->
+<section id="exam" class="content">
+<div class="card" id="setup">
+<h2>Practice Exam</h2>
+<p>Select one or more categories. Choose your exam mode, then start.</p>
+
+<div class="mode-select">
+<button class="mode-btn active" onclick="setMode(10, this)">Quick (10 questions)</button>
+<button class="mode-btn" onclick="setMode(25, this)">Normal (25 questions)</button>
+<button class="mode-btn" onclick="setMode(50, this)">Mock Exam (50 questions)</button>
+</div>
+
+<p><b>Select Categories:</b></p>
+<div class="focus" id="focusArea"></div>
+<div class="actions">
+<button class="btn alt" onclick="selectAll(true)">Select All</button>
+<button class="btn alt" onclick="selectAll(false)">Clear All</button>
+</div>
+<p>Selected: <b id="countDisplay">0</b> categories</p>
+<button class="btn" onclick="startExam()">START EXAM</button>
+</div>
+
+<div class="card" id="quizArea" style="display:none"></div>
+</section>
+
+<script>
+// ========== TAB SWITCH ==========
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.content').forEach(section => section.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(tabBtn => tabBtn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ========== SEARCH LESSONS ==========
+// ========== EXAM SETUP ==========
+let examMode = 10;
+
+function setMode(n, btn) {
+  examMode = n;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+const CATEGORIES = {
+  admin: 'Administrative / Records',
+  civil: 'Civil Service & Employment',
+  leave: 'Omnibus Rules on Leave',
+  grammar: 'Grammar / Error Recognition',
+  verbal: 'Verbal Ability',
+  ethics: 'Ethics / RA 6713',
+  proc: 'Government Procurement',
+  computer: 'Computer / Office Skills',
+  drrm: 'DRRM',
+  eo64: 'EO 64, s. 2024',
+  situational: 'Situational Judgment',
+  deped: 'DepEd Compliance & Protocols',
+  drafting: 'Document Drafting',
+  financial: 'Spreadsheet & Financial Computation'
+};
+
+// ========== EXAM QUESTION BANK (250+ items) ==========
+const QUESTIONS = {
+
+grammar: [
+  {q:'(A) Although the student body (B) continue to get smaller, the superintendent (C) insists that the high school (D) is thriving. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'collective noun "student body" = singular → continues'},
+  {q:'(A) Everyone (B) who plans (C) to attend the senior retreat (D) need to pack appropriate camping supplies. (E) No error.', opts:['A','B','C','D','E'], ans:3, exp:'Everyone = singular → needs'},
+  {q:'(A) The strangely distorted, colorful pictures by Picasso (B) has received much attention (C) not only from the critics, (D) but also from the general public. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'subject = pictures (plural) → have'},
+  {q:'(A) The Grapes of Wrath (B) are one of my favorite books, (C) but I preferred the original movie (D) when I saw it. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'book title = singular unit → is'},
+  {q:'(A) A number of criminals (B) remains at large and (C) continue to transgress the law (D) with wanton impunity. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'A number of = plural → remain'},
+  {q:'(A) Neither the manager nor (B) his assistants (C) was present at the meeting (D) yesterday. (E) No error.', opts:['A','B','C','D','E'], ans:2, exp:'verb agrees with nearest subject "assistants" (plural) → were'},
+  {q:'(A) Each of the applicants (B) are required to submit (C) their updated resume (D) before Friday. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'Each = singular → is'},
+  {q:'(A) Physics (B) are a difficult subject (C) for many students (D) entering college. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'subject name = singular → is'},
+  {q:'(A) Ten miles (B) are a long distance (C) to walk (D) on a hot afternoon. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'measurement = singular unit → is'},
+  {q:'(A) Measles (B) are an infectious disease (C) that typically affects (D) young children. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'disease name = singular → is'},
+  {q:'(A) The Philippines (B) consist of more than (C) seven thousand islands (D) and islets. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'country name = singular → consists'},
+  {q:'(A) Bread and butter (B) are my favorite (C) breakfast meal (D) every morning. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'one food unit = singular → is'},
+  {q:'(A) Most of the money (B) have been spent (C) on medical supplies (D) and equipment. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'money = uncountable → singular → has'},
+  {q:'(A) Hard work and perseverance (B) is the key (C) to achieving success (D) in life. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'two separate qualities = plural → are'},
+  {q:'(A) The committee (B) are divided in their opinions (C) regarding the new office policy. (D) No error. (E)', opts:['A','B','C','D','E'], ans:4, exp:'No error — acting as individuals = plural'},
+  {q:'(A) The police (B) is investigating (C) the robbery that occurred (D) downtown. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'police = always plural → are'},
+  {q:'(A) She is one of those women (B) who works hard (C) to achieve her goals (D) in life. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'who refers to women (plural) → work'},
+  {q:'(A) Every man, woman, and child (B) were evacuated (C) safely before the storm (D) made landfall. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'Every → singular → was'},
+  {q:'(A) The quality (B) of these imported mangoes (C) are far superior (D) to local ones. (E) No error.', opts:['A','B','C','D','E'], ans:2, exp:'subject = quality (singular) → is'},
+  {q:'(A) My uncle, along with his friends, (B) are planning to open (C) a new restaurant (D) next month. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'along with does not change subject number → is'},
+  {q:'(A) Supposing if it rains (B) tomorrow, where will we hold (C) the outdoor graduation (D) ceremony? (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'redundancy → Supposing OR If, not both'},
+  {q:'(A) Despite of his failing health, (B) the old man continued (C) to write his memoirs (D) every single day. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'Despite = NO "of" → use Despite or In spite of'},
+  {q:'(A) He is senior (B) than me (C) by two years in the government (D) service. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'correct idiom: senior TO, not than'},
+  {q:'(A) Returning back to his hometown, (B) Mark realized how much (C) the community had changed (D) over the years. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'redundancy → Returning (no "back")'},
+  {q:'(A) Between you and I, (B) the project proposed (C) is unlikely to succeed (D) this quarter. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'preposition "between" needs object pronoun → me'},
+  {q:'(A) The design (B) is similar (C) with the old cathedral (D) in downtown Manila. (E) No error.', opts:['A','B','C','D','E'], ans:2, exp:'correct preposition: similar TO'},
+  {q:'(A) She is looking forward (B) to see her family (C) after working abroad (D) for five years. (E) No error.', opts:['A','B','C','D','E'], ans:1, exp:'look forward TO + -ing → to seeing'},
+  {q:'(A) If I was the director, (B) I would implement stricter policies (C) to reduce corruption (D) in the agency. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'hypothetical subjunctive → If I WERE'},
+  {q:'(A) Unless you do not submit (B) your requirements on time, (C) your application will be (D) disqualified. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'unless is already negative → remove "do not"'},
+  {q:'(A) She is the most smartest student (B) in our graduating class (C) this academic (D) year. (E) No error.', opts:['A','B','C','D','E'], ans:0, exp:'no double comparison → smartest only'}
+],
+
+admin: [
+  {q:'Who may access confidential government records?', opts:['Anyone who asks','Authorized personnel only','Visitors with ID','Media personnel'], ans:1, exp:'RA 10173 — access limited to authorized persons with official need'},
+  {q:'First step when receiving an official document?', opts:['File it immediately','Record and log it in the logbook','Make copies','Email the sender'], ans:1, exp:'Always log and stamp incoming documents first before routing'},
+  {q:'Under RA 6713, documents should require no more than how many signatories?', opts:['2 signatories','3 signatories','5 signatories','7 signatories'], ans:1, exp:'Maximum of 3 signatories to reduce bureaucratic red tape'},
+  {q:'Which form tracks the movement of documents between offices?', opts:['Transmittal / Routing Slip','Purchase Request','Daily Time Record','Service Record'], ans:0, exp:'Routing Slip or Transmittal tracks document flow'},
+  {q:'Records classification levels include all EXCEPT:', opts:['Public','Internal','Confidential','Personal'], ans:3, exp:'Standard: Public, Internal, Confidential, Restricted — not "Personal"'},
+  {q:'What is the proper way to dispose of obsolete confidential records?', opts:['Throw in trash bin','Sell to junk shop','Shredding or secure deletion with authority','Burn openly'], ans:2, exp:'Must follow Records Disposition Schedule; shred/secure delete'},
+  {q:'SF 4 (School Form 4) is used for:', opts:['School Register','Monthly Report of Attendance','Personnel Assignment','Learner Progress Report'], ans:1, exp:'SF 4 = Monthly Report of Attendance of Learners'},
+  {q:'The Daily Time Record is also known as:', opts:['CS Form 48','CS Form 212','CS Form 6','SF 7'], ans:0, exp:'DTR = CS Form 48 — official attendance document'},
+  {q:'A good file naming convention should be:', opts:['Creative and artistic','Consistent, clear, and searchable','Use only personal nicknames','Very long and descriptive'], ans:1, exp:'Consistent naming makes retrieval fast and accurate'},
+  {q:'When a letter cannot be resolved within the 15-day deadline, the AO II must:', opts:['Ignore it until ready','Send an acknowledgment explaining the delay','Return it to sender','File it under pending without notice'], ans:1, exp:'RA 6713 requires notification of delay with status and expected date'}
+],
+
+civil: [
+  {q:'Basic principle for civil service appointments:', opts:['Popularity','Merit and Fitness','Seniority','Political connection'], ans:1, exp:'Constitution Art IX-B Sec 3: Merit and Fitness'},
+  {q:'Which appointment status gives full security of tenure?', opts:['Contractual','Job Order','Permanent','Temporary'], ans:2, exp:'Permanent appointments meet all standards and have security of tenure'},
+  {q:'An appointee who meets all standards EXCEPT eligibility gets:', opts:['Permanent','Temporary','Casual','Coterminous'], ans:1, exp:'Temporary appointment — valid for not more than 1 year'},
+  {q:'Appointment that ends when the appointing official leaves:', opts:['Permanent','Substitute','Coterminous','Casual'], ans:2, exp:'Coterminous = ends with appointing authority term'},
+  {q:'Job Order (JO) workers have:', opts:['Security of tenure','Leave credits','No employer-employee relationship','13th month pay'], ans:2, exp:'JO/COS — no employer-employee relationship; no civil service benefits'},
+  {q:'The official list of authorized regular positions in an agency:', opts:['201 File','Plantilla of Personnel','Service Record','PDS'], ans:1, exp:'Plantilla = authorized, funded regular positions'},
+  {q:'RA 10524 mandates what employment quota for PWDs?', opts:['0.5%','1%','2%','5%'], ans:1, exp:'RA 10524 — 1% employment quota for persons with disability'},
+  {q:'A substitute appointment fills a position vacated by:', opts:['Retired employee','Resigned employee','Regular employee on extended leave','Promoted employee'], ans:2, exp:'Substitute = temporarily fills position of regular on leave'},
+  {q:'Security of tenure means removal is allowed only:', opts:['At any time','For lawful cause and after due process','When budget is cut','When new official takes over'], ans:1, exp:'Can only be removed for cause and after due process'},
+  {q:'Which is NOT a standard civil service employment status?', opts:['Permanent','Temporary','Probationary','Probationary Plus'], ans:3, exp:'Standard: permanent, temporary, provisional, coterminous, fixed term, substitute, casual, contractual'}
+],
+
+leave: [
+  {q:'Standard Vacation Leave earned per month of actual service:', opts:['1.0 day','1.25 days','1.5 days','2.0 days'], ans:1, exp:'1.25 days VL + 1.25 days SL per month = 15 each per year'},
+  {q:'Maternity Leave for live birth under RA 11210:', opts:['60 days','78 days','105 days','120 days'], ans:2, exp:'105 days full pay for live childbirth'},
+  {q:'Maternity Leave for miscarriage:', opts:['30 days','45 days','60 days','105 days'], ans:2, exp:'60 days full pay for miscarriage/emergency termination'},
+  {q:'Paternity Leave entitlement:', opts:['3 days','7 days','10 days','15 days'], ans:1, exp:'7 days full pay per delivery, up to 4 children, married male only'},
+  {q:'Special Privilege Leave (SPL) per year:', opts:['3 days, non-cumulative','5 days, cumulative','7 days, non-cumulative','10 days, cumulative'], ans:0, exp:'3 days per year; non-cumulative, non-commutative'},
+  {q:'Solo Parent Leave under RA 8972/RA 11861:', opts:['3 days after 1 year service','5 days after 6 months service','7 days after 6 months service','10 days after 1 year service'], ans:2, exp:'7 days per year after at least 6 months service'},
+  {q:'VAWC Leave under RA 9262:', opts:['5 days paid','7 days paid','10 days paid','15 days paid'], ans:2, exp:'Up to 10 days paid leave for victims of violence against women and children'},
+  {q:'Maximum Rehabilitation Leave for work-related injuries:', opts:['3 months','6 months','9 months','1 year'], ans:1, exp:'Up to 6 months with full pay'},
+  {q:'Study Leave requires at least how many years continuous service?', opts:['1 year','2 years','3 years','5 years'], ans:1, exp:'At least 2 years continuous service with Very Satisfactory performance'},
+  {q:'Mandatory/Forced Leave per year:', opts:['3 days','5 days','7 days','10 days'], ans:1, exp:'5 days mandatory for employees with 10+ days VL credits'},
+  {q:'Teachers earn what instead of VL/SL credits?', opts:['Overtime pay','Proportional Vacation Pay (PVP)','Service Incentive Leave','Bonus credits'], ans:1, exp:'PVP during summer and Christmas vacations'},
+  {q:'Services rendered by teachers during vacation earn:', opts:['Cash bonus','Service Credits','Step increment','Promotion points'], ans:1, exp:'Service Credits to offset future absences'},
+  {q:'Sick leave exceeding 5 consecutive days requires:', opts:['Approved travel order','Medical Certificate','Barangay Clearance','Affidavit'], ans:1, exp:'Medical Certificate duly signed by a physician'},
+  {q:'Continuous unauthorized absence of 30+ working days:', opts:['Suspension 1 month','Dropped from the rolls','Demotion','Written warning'], ans:1, exp:'Dropped from the rolls without prior notice'},
+  {q:'Vacation Leave should be applied at least:', opts:['1 day in advance','3 days in advance','5 days in advance','Same day'], ans:2, exp:'At least 5 days in advance for administrative clearance'}
+],
+
+ethics: [
+  {q:'Public office is a:', opts:['Private business','Public trust','Personal asset','Family privilege'], ans:1, exp:'Constitution Art XI and RA 6713: Public Office = Public Trust'},
+  {q:'RA 6713 is known as:', opts:['Procurement Act','Code of Conduct and Ethical Standards','Data Privacy Act','Leave Rules'], ans:1, exp:'Code of Conduct and Ethical Standards for Public Officials and Employees'},
+  {q:'How many Norms of Conduct under RA 6713?', opts:['5','6','8','10'], ans:2, exp:'8 Norms: Public Interest, Professionalism, Justness, Political Neutrality, Responsiveness, Nationalism, Democracy, Simple Living'},
+  {q:'Choosing supplier with better quality at lower price over personal discount upholds:', opts:['Professionalism','Commitment to Public Interest','Political Neutrality','Simple Living'], ans:1, exp:'Prioritizing public interest over personal gain'},
+  {q:'Refusing to distribute campaign flyers inside school upholds:', opts:['Professionalism','Political Neutrality','Responsiveness','Simple Living'], ans:1, exp:'Political Neutrality — independent of party affiliation'},
+  {q:'Wearing modest uniform and avoiding flashy jewelry demonstrates:', opts:['Justness and Sincerity','Simple Living','Nationalism','Professionalism'], ans:1, exp:'Simple Living — no ostentatious displays of wealth'},
+  {q:'Responding to letters/requests within how many working days?', opts:['3 days','5 days','10 days','15 days'], ans:3, exp:'RA 6713 mandates 15 working days'},
+  {q:'SALN must be filed within how many days after assumption?', opts:['15 days','30 days','60 days','90 days'], ans:1, exp:'Within 30 days after assuming office'},
+  {q:'Annual SALN filing deadline:', opts:['March 15','April 30','June 30','December 31'], ans:1, exp:'On or before April 30 of every year'},
+  {q:'Post-employment restriction ban lasts for:', opts:['6 months','1 year','2 years','5 years'], ans:1, exp:'1 year ban on matters previously acted upon'},
+  {q:'Accepting an expensive smartphone from a supplier is:', opts:['Allowed if declared in SALN','Allowed if token of appreciation','Prohibited under RA 6713','Allowed if turned over to school'], ans:2, exp:'Cannot accept gifts of monetary value connected to official duties'},
+  {q:'Conflict of interest when relative is bidding — AO II should:', opts:['Help relative get lower bid','Disclose and inhibit from process','Resign immediately','Tell others to withdraw'], ans:1, exp:'Full disclosure and self-inhibition required'},
+  {q:'Maximum administrative suspension under RA 6713:', opts:['1 month','6 months','1 year','2 years'], ans:2, exp:'Administrative suspension cannot exceed 1 year'},
+  {q:'Maximum criminal penalty imprisonment:', opts:['1 year','3 years','5 years','10 years'], ans:2, exp:'Up to 5 years imprisonment upon conviction'},
+  {q:'Who grants Lingkod Bayan / Dangal ng Bayan awards?', opts:['DBM','CSC','PRC','DOLE'], ans:1, exp:'Civil Service Commission administers the incentives and rewards system'},
+  {q:'Visible posting of service standards is done through:', opts:['Internal memo','Citizen\'s Charter','Private logbook','Oral instructions'], ans:1, exp:'DepEd Citizen\'s Charter posted at front office'},
+  {q:'Which is EXEMPT from the gift ban?', opts:['Cash gift from supplier','Nominal token during traditional celebration, no strings','Expensive watch after winning bid','Free resort stay'], ans:1, exp:'Nominal/insignificant tokens during traditional seasons are exempt'},
+  {q:'Divulging teacher 201 file data to a lending company violates:', opts:['Political Neutrality','Simple Living','Confidentiality / Data Privacy','Professionalism'], ans:2, exp:'Misuse and disclosure of confidential information is prohibited'},
+  {q:'Frontline service: client arrives at 4:55 PM, office closes 5:00 PM.', opts:['Tell them to come back tomorrow','Attend promptly even if it extends past closing','Close the door','Call security'], ans:1, exp:'Must serve clients who arrive within official hours'},
+  {q:'Who reviews SALN completeness?', opts:['PTA President','Review and Compliance Committee','Local Mayor','Private auditor'], ans:1, exp:'Review and Compliance Committee designated by agency head'}
+],
+
+proc: [
+  {q:'Current main procurement law:', opts:['RA 9184','RA 12009','RA 6713','RA 10173'], ans:1, exp:'RA 12009 = New Government Procurement Act (CURRENT)'},
+  {q:'Old Government Procurement Reform Act:', opts:['RA 9184','RA 12009','RA 7305','RA 8187'], ans:0, exp:'RA 9184 = OLD Procurement Reform Act of 2003'},
+  {q:'BAC typically has how many members?', opts:['3 to 5','5 to 7','7 to 9','Exactly 5'], ans:1, exp:'5 to 7 members'},
+  {q:'Who appoints BAC members?', opts:['BAC Chairperson','HOPE (Head of Procuring Entity)','COA Auditor','CSC'], ans:1, exp:'HOPE has sole authority to appoint BAC'},
+  {q:'Who is PROHIBITED from serving as BAC member?', opts:['Division Chief','Administrative Officer','HOPE','Technical staff'], ans:2, exp:'HOPE cannot be BAC member to maintain checks and balances'},
+  {q:'Standard term of BAC member:', opts:['6 months','1 year, renewable','3 years','Co-terminus with HOPE'], ans:1, exp:'One year, renewable at HOPE discretion'},
+  {q:'Primary function of TWG:', opts:['Approve contract','Issue NOA','Assist BAC in eligibility screening and evaluation','Audit funds'], ans:2, exp:'Technical Working Group provides technical assistance'},
+  {q:'Who creates the TWG?', opts:['HOPE','BAC','BAC Secretariat','End-user unit'], ans:1, exp:'BAC creates TWG from pool of experts'},
+  {q:'"Jury Duty" principle means:', opts:['Act as judges','Leave of absence required','Utmost priority to procurement over other duties','Exempt from liability'], ans:2, exp:'Must prioritize procurement until completed'},
+  {q:'Number of external observers required:', opts:['At least 1','At least 2','At least 3 (1 COA + 2 private/NGO)','Only during bid opening'], ans:2, exp:'At least 3 observers'},
+  {q:'Observers must be invited how many days before?', opts:['3 calendar days','5 calendar days','7 calendar days','15 calendar days'], ans:1, exp:'At least 5 calendar days before'},
+  {q:'Pre-Bid Conference mandatory for Goods if ABC is at least:', opts:['PhP 500,000','PhP 1,000,000','PhP 2,000,000','PhP 5,000,000'], ans:1, exp:'ABC ≥ PhP 1M for Goods'},
+  {q:'For Goods/Infra, BAC determines the:', opts:['Highest Rated Bid','Lowest Calculated Bid (LCB)','Most Economical Proposal','Fastest Delivery'], ans:1, exp:'LCB for Goods and Infrastructure'},
+  {q:'For Consulting Services, BAC determines the:', opts:['Highest Rated Bid (HRB)','Lowest Calculated Bid','Most Responsive Bid','Lowest Priced'], ans:0, exp:'HRB for consulting — technical expertise over cost'},
+  {q:'Bid exceeding ABC is:', opts:['Negotiable','Accepted if quality superior','Automatically disqualified','Reviewed by HOPE'], ans:2, exp:'Bids above ABC are automatically rejected'},
+  {q:'After LCB determination, next stage:', opts:['Notice of Award','Contract signing','Post-Qualification','Pre-Procurement Conference'], ans:2, exp:'Post-Qualification verifies all statements'},
+  {q:'Bid passing post-qualification becomes:', opts:['LCRB — Lowest Calculated Responsive Bid','FAB — Final Approved Bid','SCRB — Single Calculated Bid','PRB — Premium Responsive Bid'], ans:0, exp:'LCRB = Lowest Calculated Responsive Bid'},
+  {q:'Administrative penalty barring from all government procurement:', opts:['Suspension','Blacklisting','Disbarment','Garnishment'], ans:1, exp:'Blacklisting'},
+  {q:'Failure of bidding occurs when:', opts:['No bids received','All bids fail compliance','Winning bidder refuses award','All of the above'], ans:3, exp:'All are grounds for failure of bidding'},
+  {q:'After 2 consecutive failed biddings, may recommend:', opts:['Direct Contracting','Repeat Order','Negotiated Procurement','Shopping'], ans:2, exp:'Negotiated Procurement after two failed biddings'},
+  {q:'Chief Accountant as BAC member:', opts:['Allowed, finance expertise','Allowed if HOPE appoints','Not allowed — conflict of interest','Must be BAC Secretariat only'], ans:2, exp:'Cannot approve vouchers AND sit on BAC — conflict of interest'},
+  {q:'Central electronic procurement portal:', opts:['PhilGEPS','COA Portal','DBM e-System','CSC Online'], ans:0, exp:'PhilGEPS = Philippine Government Electronic Procurement System'},
+  {q:'Words vs figures discrepancy in bid:', opts:['Figures prevail','Words prevail','Average taken','Bid rejected'], ans:1, exp:'Amount in words prevails by law'},
+  {q:'Winning bidder must post this before contract signing:', opts:['Bid bond','Performance Security','Surety bond','Cash deposit'], ans:1, exp:'Performance Security guarantees faithful performance'},
+  {q:'RA 12009 introduces:', opts:['Digitalization and video recording','Paper-only bidding','Manual processes only','Local preference only'], ans:0, exp:'RA 12009 mandates digitalization and open data'}
+],
+
+computer: [
+  {q:'Excel formula to add values in range C2:C10:', opts:['=COUNT(C2:C10)','=SUM(C2:C10)','=TOTAL(C2:C10)','=ADD(C2:C10)'], ans:1, exp:'SUM is the standard addition function'},
+  {q:'All Excel formulas must begin with:', opts:['$','@','#','='], ans:3, exp:'Equal sign (=) starts every formula'},
+  {q:'### displayed in a cell means:', opts:['Formula error','Column too narrow','Division by zero','Invalid reference'], ans:1, exp:'Widen the column to display the value'},
+  {q:'Feature to highlight expenses > ₱50K in red:', opts:['Data Validation','AutoFilter','Conditional Formatting','Format Painter'], ans:2, exp:'Conditional Formatting changes style based on criteria'},
+  {q:'Function to look up value in a table:', opts:['=IF()','=VLOOKUP()','=CONCATENATE()','=COUNTIF()'], ans:1, exp:'VLOOKUP searches for a value and returns corresponding data'},
+  {q:'To lock a cell reference when copying formulas:', opts:['$$A$1','*A*1','&&A&&','!!A!!'], ans:0, exp:'Dollar signs ($) create absolute references'},
+  {q:'Function to find average:', opts:['=AVERAGE()','=MEAN()','=AVG()','=SUM()/12'], ans:0, exp:'AVERAGE() is the standard function'},
+  {q:'Count only items categorized as "Serviceable":', opts:['=COUNT()','=COUNTA()','=COUNTIF()','=SUMIF()'], ans:2, exp:'COUNTIF counts cells matching specific criteria'},
+  {q:'=NOW() displays:', opts:['Current time only','Current date only','Current date and time','Time elapsed since opened'], ans:2, exp:'NOW() returns both current date and time'},
+  {q:'Join First Name and Last Name cells:', opts:['=MERGE()','=COMBINE()','=CONCATENATE()','=SPLIT()'], ans:2, exp:'CONCATENATE() or & operator joins text'},
+  {q:'Keyboard shortcut to undo:', opts:['Ctrl+C','Ctrl+V','Ctrl+Z','Ctrl+Y'], ans:2, exp:'Ctrl+Z = Undo'},
+  {q:'Sort dates from oldest to newest:', opts:['Ascending','Descending','Custom filter','Text filter'], ans:0, exp:'Ascending = oldest to newest'},
+  {q:'Multiplication operator in Excel:', opts:['x','*','^','÷'], ans:1, exp:'Asterisk (*) is multiplication'},
+  {q:'Restrict cell input to values ≤ allocation:', opts:['Protect Sheet','Data Validation','Goal Seek','Freeze Panes'], ans:1, exp:'Data Validation restricts what can be entered'},
+  {q:'Keep header row visible while scrolling:', opts:['Split Screen','Freeze Panes','Wrap Text','Merge & Center'], ans:1, exp:'Freeze Panes locks rows/columns in place'},
+  {q:'Phishing is:', opts:['Fishing hobby','Tricking people to steal information','Software name','Hardware part'], ans:1, exp:'Deception to obtain sensitive data like passwords'},
+  {q:'Strong password practice:', opts:['Use birthday','Share with trusted colleague','Use mix of letters, numbers, symbols','Write it on monitor'], ans:2, exp:'Complex passwords are harder to crack'},
+  {q:'Email subject line should be:', opts:['Blank','Clear and specific','Very long','Cryptic'], ans:1, exp:'Clear subject helps recipient prioritize and understand'},
+  {q:'File management best practice:', opts:['Random naming','Logical folders and consistent naming','All files on desktop','No backups needed'], ans:1, exp:'Organized structure makes retrieval efficient'},
+  {q:'=SUM(10,20,30)/2 equals:', opts:['15','30','60','45'], ans:1, exp:'60 / 2 = 30'}
+],
+
+drrm: [
+  {q:'Philippine DRRM foundational law:', opts:['RA 7160','RA 9729','RA 10121','RA 10821'], ans:2, exp:'RA 10121 = Philippine DRRM Act of 2010'},
+  {q:'How many thematic areas under RA 10121?', opts:['3','4','5','6'], ans:1, exp:'4 thematic areas: Prevention/Mitigation, Preparedness, Response, Rehabilitation/Recovery'},
+  {q:'Which is NOT a thematic area?', opts:['Prevention and Mitigation','Disaster Preparedness','Disaster Response','Disaster Insurance'], ans:3, exp:'Insurance is not one of the four pillars'},
+  {q:'Disaster Risk formula:', opts:['Risk = (Hazard × Vulnerability) / Capacity','Risk = (Capacity × Vulnerability) / Hazard','Risk = Hazard + Vulnerability − Capacity','Risk = (Hazard + Capacity) / Vulnerability'], ans:0, exp:'Standard DRRM formula'},
+  {q:'Characteristics making community susceptible to damage:', opts:['Capacity','Vulnerability','Exposure','Mitigation'], ans:1, exp:'Vulnerability = susceptibility to damaging effects'},
+  {q:'Combination of strengths and resources to manage risk:', opts:['Resilience','Exposure','Capacity','Coping mechanism'], ans:2, exp:'Capacity = available strengths and resources'},
+  {q:'Earthquake and fire drills frequency:', opts:['Monthly','Quarterly','Semi-annually','Annually'], ans:1, exp:'Required quarterly (every 3 months)'},
+  {q:'Standard earthquake drill action:', opts:['Run, Hide, Fight','Drop, Cover, Roll','Duck, Cover, and Hold','Stop, Look, Listen'], ans:2, exp:'Duck, Cover, and Hold'},
+  {q:'Monitors earthquakes, volcanoes, tsunamis:', opts:['PAGASA','PHIVOLCS','NDRRMC','MGB'], ans:1, exp:'PHIVOLCS = Philippine Institute of Volcanology and Seismology'},
+  {q:'Provides weather updates and typhoon warnings:', opts:['PHIVOLCS','PAGASA','OCD','DILG'], ans:1, exp:'PAGASA = weather bureau'},
+  {q:'RADaR must be submitted within:', opts:['12 hours','24 to 72 hours','5 days','1 week'], ans:1, exp:'Rapid Assessment of Damages Report within 24-72 hours'},
+  {q:'3 Pillars of Safe School Framework EXCEPT:', opts:['Safe Learning Facilities','School Disaster Management','Risk Reduction Education','Funding and Training'], ans:3, exp:'3 pillars: Facilities, Management, Education'},
+  {q:'EWS stands for:', opts:['Emergency Warning System','Early Warning System','Evacuation Work Stream','Environmental Watch Station'], ans:1, exp:'Early Warning System'},
+  {q:'Maximum days school may be used as evacuation center:', opts:['5 days','10 days','15 days','30 days'], ans:2, exp:'Not more than 15 days to avoid class disruption'},
+  {q:'Industrial accidents, fires, chemical spills are:', opts:['Natural Geological','Hydrometeorological','Human-induced / Anthropogenic','Biological'], ans:2, exp:'Human-caused hazards'},
+  {q:'ICS in emergency response:', opts:['Incident Control System','Incident Command System','Inter-Agency Coordination','Integrated Crisis Strategy'], ans:1, exp:'Incident Command System = standardized structure'},
+  {q:'Overall tactical authority at emergency site:', opts:['School Principal','Incident Commander','Operations Chief','Punong Barangay'], ans:1, exp:'Incident Commander has overall authority'},
+  {q:'"Build Back Better" means:', opts:['Fast reconstruction only','Enhance capacities so less vulnerable than before','Accelerated recovery','Resilient restoration'], ans:1, exp:'Make communities less vulnerable to future shocks'},
+  {q:'Fire Triangle elements:', opts:['Heat, Gas, Pressure','Oxygen, Fuel, Heat','Carbon, Spark, Oxygen','Flame, Fuel, Smoke'], ans:1, exp:'Three essential elements for combustion'},
+  {q:'Clothes catch fire — action:', opts:['Run to water','Fan with cloth','Stop, Drop, and Roll','Remove jacket while standing'], ans:2, exp:'Stop, Drop, and Roll to smother flames'},
+  {q:'Class suspension guidelines:', opts:['EO 66, s. 2012','EO 34, s. 2015','EO 101, s. 2018','EO 19, s. 2020'], ans:0, exp:'EO 66, s. 2012 governs suspension due to weather'},
+  {q:'Global DRR framework 2015-2030:', opts:['Hyogo Framework','Sendai Framework','Paris Agreement','Kyoto Protocol'], ans:1, exp:'Sendai Framework replaced Hyogo'},
+  {q:'Schools as evacuation centers:', opts:['First option','Last resort only','Always','Only for 2 days'], ans:1, exp:'Only as absolute last resort'},
+  {q:'Hazard vs Disaster:', opts:['Same thing','Hazard = potential threat; Disaster = actual disruption','Disaster = potential; Hazard = actual','Both mean accident'], ans:1, exp:'Hazard is potential; Disaster is when it actually happens'},
+  {q:'Typhoons, floods come from:', opts:['Geological processes','Hydrometeorological processes','Biological sources','Human causes'], ans:1, exp:'Hydrometeorological = atmospheric/hydrological/oceanographic'}
+],
+
+eo64: [
+  {q:'EO 64, s. 2024 covers:', opts:['Military personnel only','Civilian government personnel','Both civilian and military','Uniformed personnel only'], ans:1, exp:'Updates salary schedule for civilian government personnel'},
+  {q:'EO 64 signed on:', opts:['July 25, 2024','August 2, 2024','Jan 1, 2024','Sept 1, 2024'], ans:1, exp:'August 2, 2024 by Executive Secretary Bersamin'},
+  {q:'How many tranches?', opts:['3','4','5','6'], ans:1, exp:'4 tranches from FY 2024 to 2027'},
+  {q:'Tranche 1 implemented retroactively starting:', opts:['July 1, 2024','Aug 2, 2024','Jan 1, 2024','Jan 1, 2025'], ans:2, exp:'Retroactive to January 1, 2024'},
+  {q:'Additional allowance granted:', opts:['Rice Subsidy','Clothing Allowance','Medical Allowance','Hazard Pay'], ans:2, exp:'Medical Allowance authorized'},
+  {q:'Maximum Medical Allowance per annum:', opts:['PhP 5,000','PhP 7,000','PhP 10,000','PhP 12,000'], ans:1, exp:'Up to PhP 7,000 per year'},
+  {q:'Medical Allowance primarily for:', opts:['Life insurance','HMO services','Pharmacy discounts','PhilHealth premiums'], ans:1, exp:'Health Maintenance Organization services'},
+  {q:'Agency issuing implementation guidelines:', opts:['CSC','DOH','DBM','GSIS'], ans:2, exp:'Department of Budget and Management'},
+  {q:'DBM Budget Circular for Medical Allowance:', opts:['Budget Circular No. 2024-6','CSC MC No. 10, s. 2024','Local Budget Circular No. 160','Joint Resolution No. 4'], ans:0, exp:'DBM Budget Circular No. 2024-6'},
+  {q:'NOT covered by EO 64:', opts:['Regular NGA employees','LGU personnel','Military and uniformed personnel','Constitutional Commission employees'], ans:2, exp:'Military/uniformed have separate system'},
+  {q:'Also specifically excluded:', opts:['Casual employees','Contractual personnel','JO / COS workers','Appointive local officials'], ans:2, exp:'JO/COS — no employer-employee relationship'},
+  {q:'Tranche 3 effective:', opts:['Jan 1, 2025','Jan 1, 2026','Jan 1, 2027','Jul 1, 2026'], ans:1, exp:'January 1, 2026'},
+  {q:'LGU implementation must comply with PS limit under:', opts:['RA 9184','RA 7160','RA 11466','RA 6713'], ans:1, exp:'RA 7160 = Local Government Code'},
+  {q:'Who determines Medical Allowance grant for LGUs?', opts:['Local Chief Executive','Local Finance Committee','Sanggunian','DBM Regional Office'], ans:2, exp:'Respective Sanggunian based on financial capability'},
+  {q:'Divisor for casual daily wage rate:', opts:['20 days','22 days','26 days','30 days'], ans:1, exp:'22 workdays per month'},
+  {q:'Salary exceeds new Step 8:', opts:['Pro-rated increase','Adjusted to Step 8; if still exceeds, no increase','Automatic promotion','One-time bonus'], ans:1, exp:'No salary increase if already above Step 8'},
+  {q:'LGU guidelines issuance:', opts:['Local Budget Circular No. 160','Budget Circular No. 2024-6','National Budget Circular No. 597','Joint Circular No. 1'], ans:0, exp:'Local Budget Circular No. 160'},
+  {q:'Medical Allowance forms:', opts:['Cash only','HMO only','Either HMO or cash','Reimbursable receipts only'], ans:2, exp:'Can be HMO coverage OR cash for those with own HMO'},
+  {q:'Compulsory retirees with extended service:', opts:['Excluded','Entitled to the increase','Half rate','Medical Allowance only'], ans:1, exp:'Explicitly entitled to the increase'},
+  {q:'New hire salary starts at:', opts:['Step 1','Step 2','Highest step','Agency Head discretion'], ans:0, exp:'Step 1 of corresponding salary grade'},
+  {q:'EO 64 builds upon which SSL law?', opts:['RA 6758','RA 11466','RA 10149','PD 985'], ans:1, exp:'RA 11466 = SSL V (2019)'},
+  {q:'Funding source for NGAs:', opts:['LGU funds','Corporate budgets','General Appropriations Act','President\'s Contingency Fund'], ans:2, exp:'GAA funds NGA salary adjustments'},
+  {q:'Took effect upon publication in:', opts:['Local bulletin','Official Gazette or newspaper of general circulation','DBM website','CSC portal'], ans:1, exp:'Standard publication requirement'},
+  {q:'Tranche 4 effective:', opts:['Jan 1, 2026','Jan 1, 2027','Jul 1, 2027','Jan 1, 2028'], ans:1, exp:'Fourth and final tranche: January 1, 2027'}
+],
+
+situational: [
+  {q:'Supervisor asks you to release confidential record to unauthorized person. You:', opts:['Do it quietly','Decline and explain the rule','Blame someone else','Ignore it'], ans:1, exp:'Rules apply regardless of who asks; explain professionally'},
+  {q:'Found error in official report already submitted. You:', opts:['Hide it','Notify proper authority and correct it','Let it go','Blame others'], ans:1, exp:'Accountability and transparency required'},
+  {q:'Heavy workload with tight deadlines. First action:', opts:['Complain to supervisor','Prioritize tasks by urgency and importance','Do easiest first','Skip some tasks'], ans:1, exp:'Prioritization is the first step to managing heavy workload'},
+  {q:'Supplier offers expensive gift for fast processing. You:', opts:['Accept privately','Accept and turn over to school','Politely refuse','Accept but declare in SALN'], ans:2, exp:'RA 6713 prohibits accepting gifts of value connected to duties'},
+  {q:'Relative is bidding for school supply contract. You are on BAC. You:', opts:['Help relative get contract','Disclose relationship and inhibit from process','Stay silent and vote objectively','Ask other bidders to withdraw'], ans:1, exp:'Conflict of interest requires disclosure and self-inhibition'},
+  {q:'Colleague is stealing office supplies. You:', opts:['Stay silent','Report through proper channels','Join them','Confront publicly'], ans:1, exp:'Upholding public interest requires reporting through channels'},
+  {q:'Client arrives at 4:55 PM, office closes 5:00 PM. You:', opts:['Tell them to come back tomorrow','Attend promptly and render service','Close the door','Call security'], ans:1, exp:'Frontline duty — serve those who arrive within official hours'},
+  {q:'Request cannot be resolved within 15 days. You:', opts:['Ignore until ready','Send acknowledgment explaining delay and expected date','Return to sender','File under pending'], ans:1, exp:'RA 6713 requires notification if deadline cannot be met'},
+  {q:'Unclear instruction from supervisor. You:', opts:['Guess and hope for best','Ask for clarification immediately','Wait for someone else to do it','Do it your own way'], ans:1, exp:'Clarify first rather than making mistakes'},
+  {q:'Two tasks with same deadline. You:', opts:['Do the easier one first','Assess which is more important/urgent','Do both simultaneously poorly','Ask supervisor to choose'], ans:1, exp:'Prioritize by importance and urgency'},
+  {q:'Discovered breach in confidential data security. You:', opts:['Ignore it','Report immediately to proper authority','Fix it quietly and not tell','Blame IT department'], ans:1, exp:'Data breaches must be reported immediately'},
+  {q:'Teacher complains aggressively about salary delay. You:', opts:['Argue back','Listen calmly, explain process, give timeline','Walk away','Tell them to go to SDO'], ans:1, exp:'Responsiveness — address with courtesy and transparency'},
+  {q:'School property lost due to your negligence. You:', opts:['Hide it','Report and accept accountability','Blame others','Say it was stolen'], ans:1, exp:'Accountability means accepting responsibility for one\'s actions'},
+  {q:'New policy you disagree with is issued. You:', opts:['Refuse to follow','Follow and give feedback through proper channels','Complain publicly','Tell others to ignore it'], ans:1, exp:'Follow lawful orders; provide constructive feedback through channels'},
+  {q:'Unfamiliar with procedure being asked. You:', opts:['Guess','Consult official manual or proper authority','Say yes and figure it out later','Decline to help'], ans:1, exp:'Check official rule or ask proper authority — do not guess'}
+],
+
+verbal: [
+  {q:'"Concise" means:', opts:['Long and detailed','Brief and clear','Confusing','Emotional'], ans:1, exp:'Expressing much in few words'},
+  {q:'"Verify" means:', opts:['Destroy','Confirm truth/accuracy','Hide','Change'], ans:1, exp:'Check or prove correctness'},
+  {q:'"Expedite" means:', opts:['Delay','Speed up','Examine','Cancel'], ans:1, exp:'To make happen faster or sooner'},
+  {q:'"Stringent" means:', opts:['Lenient','Strict','Flexible','Confusing'], ans:1, exp:'Strict, precise, exacting'},
+  {q:'"Redundant" means:', opts:['Essential','Unnecessary repetition','Concise','Vital'], ans:1, exp:'Exceeding what is necessary; repetition'},
+  {q:'"Mitigate" means:', opts:['Worsen','Make less severe','Ignore','Remove completely'], ans:1, exp:'To make less severe, serious, or painful'},
+  {q:'"Ostentatious" means:', opts:['Simple','Showy display of wealth','Humble','Practical'], ans:1, exp:'Characterized by vulgar or pretentious display'},
+  {q:'"Prudent" means:', opts:['Reckless','Wise and careful','Impulsive','Generous'], ans:1, exp:'Acting with or showing care and thought for the future'},
+  {q:'Prefix "pre-" means:', opts:['After','Before','Again','Not'], ans:1, exp:'pre- = before (preview, predict, prepare)'},
+  {q:'Prefix "mis-" means:', opts:['Correct','Wrong','Again','Between'], ans:1, exp:'mis- = wrong/bad (misunderstand, misplace, mistake)'},
+  {q:'Sentence: "The manager\'s ____ decision saved the company from financial loss."', opts:['reckless','prudent','impulsive','ostentatious'], ans:1, exp:'prudent = wise and careful'},
+  {q:'Paragraph organization — first sentence usually:', opts:['Supporting detail','Topic sentence','Example','Conclusion'], ans:1, exp:'Topic sentence introduces the main idea'},
+  {q:'Reading comprehension — answers are usually:', opts:['Not in the text','In the text explicitly','Based on opinion','From outside knowledge'], ans:1, exp:'Answers are typically found within the passage'},
+  {q:'Transition word "however" indicates:', opts:['Addition','Contrast','Result','Sequence'], ans:1, exp:'However = introduces a contrasting point'},
+  {q:'Transition word "therefore" indicates:', opts:['Addition','Contrast','Result/conclusion','Time'], ans:2, exp:'Therefore = as a result/consequence'}
+],
+
+deped: [
+  {q:'RA 9155 is also known as:', opts:['Anti-Red Tape Act','Governance of Basic Education Act of 2001','Code of Conduct','Magna Carta for Teachers'], ans:1, exp:'Governance of Basic Education Act — school-based management'},
+  {q:'Heart of formal education system under RA 9155:', opts:['Central Office','Regional Office','Schools Division Office','School Level'], ans:3, exp:'The school level is where learning actually happens'},
+  {q:'NOT a DepEd core value:', opts:['Maka-Diyos','Makatao','Makasarili','Makabansa'], ans:2, exp:'Core values: Maka-Diyos, Makatao, Makakalikasan, Makabansa'},
+  {q:'Ease of Doing Business Act:', opts:['RA 6713','RA 9184','RA 11032','RA 10173'], ans:2, exp:'RA 11032 — eliminate bureaucratic red tape'},
+  {q:'Standard government service classification code system:', opts:['GSIS numbers','UACS — Unified Account Code Structure','CSC index','PRC license IDs'], ans:1, exp:'UACS classifies accounts, revenues, expenditures uniformly'},
+  {q:'Document outlining services, processing times, requirements:', opts:['Annual Budget Report','Citizen\'s Charter','Administrative Logbook','Resiliency Plan'], ans:1, exp:'Citizen\'s Charter = visible service standards guide'},
+  {q:'School-level issues first reported to:', opts:['SDS','Regional Director','School Head / Principal','DepEd Secretary'], ans:2, exp:'Chain of command: School Head first'},
+  {q:'Document conveying immediate rules/policies to staff:', opts:['Memorandum','Purchase Request','Summary Ledger','Attendance Log'], ans:0, exp:'Memorandum = internal official communication'},
+  {q:'Performance evaluation tool for non-teaching personnel:', opts:['OPCRF','IPCRF','Lesson Plan','Service Record'], ans:1, exp:'IPCRF = Individual Performance Commitment and Review Form'},
+  {q:'Grave administrative offense:', opts:['Occasional tardiness','Dishonesty and grave misconduct','Simple discourtesy','Minor clerical error'], ans:1, exp:'Dishonesty/grave misconduct = grave offenses'},
+  {q:'MOOE stands for:', opts:['Monthly Operations and Office Expenses','Maintenance and Other Operating Expenses','Management of Organizational Equity','Municipal Office Expenditures'], ans:1, exp:'Maintenance and Other Operating Expenses'},
+  {q:'Audits all government financial transactions:', opts:['BIR','DBM','COA','CSC'], ans:2, exp:'Commission on Audit = independent constitutional auditor'},
+  {q:'Petty cash for school operations:', opts:['Trust Fund','Petty Cash Advance / MOOE Cash Advance','Personal account','Discretionary allowance'], ans:1, exp:'MOOE Cash Advance for non-implementing units'},
+  {q:'Document proving cash advances spent properly:', opts:['Disbursement Voucher','Liquidation Report','Purchase Request','Income Statement'], ans:1, exp:'Liquidation Report = proof of proper utilization'},
+  {q:'Valid MOOE expense:', opts:['Teacher personal vacation','Classroom chalk, paper, utility bills','Regular teacher salary','New 2-story building'], ans:1, exp:'MOOE covers supplies, utilities, minor maintenance'},
+  {q:'Donations through Adopt-a-School Program:', opts:['Personal funds of Principal','Trust Funds via Deed of Donation','Regular MOOE top-up','Cash dividends'], ans:1, exp:'Trust funds documented through Deed of Donation'},
+  {q:'Primary valid proof of payment for COA:', opts:['Sales Invoice','Official Receipt (OR)','Collection Receipt','Delivery Receipt'], ans:1, exp:'Official Receipt recognized by COA and BIR'},
+  {q:'New cash advance allowed only if:', opts:['Fiscal year ends','Previous cash advance fully liquidated','Division Accountant verbal OK','Balance < ₱1,000'], ans:1, exp:'No new cash advance until previous is fully liquidated'},
+  {q:'Liquidate travel cash advance within how many days after return?', opts:['5 days','10 days','30 days','60 days'], ans:1, exp:'COA Circular 97-002: 10 days after return'},
+  {q:'Itemized procurement needs list:', opts:['AIP','PPMP — Project Procurement Management Plan','SIP','IRA'], ans:1, exp:'PPMP = specialized itemized procurement list'},
+  {q:'Unutilized MOOE funds may:', opts:['Become staff bonus','Roll over automatically','Revert to National Treasury','Be retained as penalty'], ans:2, exp:'Uncommitted/unliquidated balance reverts to Treasury'},
+  {q:'Employee 201 file contains:', opts:['MOOE records','Appointments, clearances, diplomas, records','UACS register','Asset ledger'], ans:1, exp:'201 File = complete personnel records folder'},
+  {q:'NOT allowable MOOE expense:', opts:['Water bill','School supplies','Personal travel allowance of staff','Classroom window repair'], ans:2, exp:'Personal expenses never charged to MOOE'},
+  {q:'"MOV" in performance tracking:', opts:['Management Operational Value','Means of Verification','Monthly Organizational Validation','Memorandum of Verification'], ans:1, exp:'Means of Verification = documentary proof of accomplishment'},
+  {q:'Tax compliance and updating handled by:', opts:['SSS','BIR','DBM','DOLE'], ans:1, exp:'Bureau of Internal Revenue handles tax registration/certificates'}
+],
+
+drafting: [
+  {q:'"DM No. 474, s. 2026" — "s." stands for:', opts:['Section','Summary','Series','Subject'], ans:2, exp:'s. = series (of the year)'},
+  {q:'Which section specifies who must read and comply?', opts:['SUBJECT','TO','FROM','PARTICULARS'], ans:1, exp:'TO = target recipients'},
+  {q:'Most appropriate closing for letter to higher official:', opts:['Cheers,','Respectfully yours,','Best regards,','Signed,'], ans:1, exp:'Respectfully yours = formal for superiors'},
+  {q:'Purpose of Transmittal Letter:', opts:['Reprimand subordinate','Officially send records/files between offices','Request repairs','Announce suspension'], ans:1, exp:'Transmittal = forwards documents with cover'},
+  {q:'Signature block of approving authority is located:', opts:['Top-left margin','At the very end of document text','Under subject line','In header'], ans:1, exp:'Signature appears at the end'},
+  {q:'Best way to track document with multiple signatures:', opts:['Verbal confirmation','Document Tracking/Routing Slip','Text recipients','Handwritten notes on face'], ans:1, exp:'Routing Slip = standard tracking tool'},
+  {q:'Transmittal Letter bottom should include:', opts:['School history summary','"Received By" section with name, signature, date','Utility coordinates','List of past principals'], ans:1, exp:'Proof of delivery/receipt section'},
+  {q:'OIC signing for absent School Head:', opts:['Forge signature','Sign own name over "For" or "OIC" above title','Leave blank','Print without signature'], ans:1, exp:'Standard OIC signing protocol'},
+  {q:'Preferred font for government documents:', opts:['Decorative script','Arial, Calibri, or Times New Roman','All-caps italic','Colorful artistic font'], ans:1, exp:'Clean, readable professional fonts'},
+  {q:'Which part briefly summarizes document purpose in one line?', opts:['SUBJECT','TO','PARTICULARS','FROM'], ans:0, exp:'SUBJECT = concise one-line summary'},
+  {q:'Attached documents referenced as:', opts:['Annex or Enclosure','Footnote Index','Postscript','Disclaimer'], ans:0, exp:'Enclosures/Annexes = attached documents'},
+  {q:'Sender\'s office name, address, logo block:', opts:['Inside Address','Letterhead','Footer','Salutation Margin'], ans:1, exp:'Letterhead = sender identification block'},
+  {q:'"Immediate dissemination and strict compliance is desired" means:', opts:['Optional','Share right away and follow without exception','Archive','Confidential'], ans:1, exp:'Act immediately and comply fully'},
+  {q:'Before printing 3 copies for submission:', opts:['Print draft to proofread first','Clear memory logs','Change to image format','Submit digital only'], ans:0, exp:'Always proofread before printing multiple copies'},
+  {q:'Memorandum applying to single school only:', opts:['Division Memorandum','Regional Memorandum','School Memorandum','Office Order'], ans:2, exp:'School Memorandum = campus-level issuance'},
+  {q:'Numbered lists in instructions should use:', opts:['Continuous paragraph','Clean hierarchical outline numbering (1, 2, a, b)','Random symbols','Full prose text'], ans:1, exp:'Structured outline for clarity'},
+  {q:'Deadline date format to prevent confusion:', opts:['"not later than June 29, 2026"','"by next week Monday"','omit date','"06/29/26" only'], ans:0, exp:'Complete clear date format avoids ambiguity'},
+  {q:'Archiving official memorandum after release:', opts:['Discard original','File signed original securely + digital backup','Post on social media','Store on shared desktop'], ans:1, exp:'Secure filing with backup is required'},
+  {q:'"THRU" line in transmittal:', opts:['Optional decoration','Respects chain of command','Recipient of document','Document reference'], ans:1, exp:'THRU = proper channel through which document passes'},
+  {q:'Minutes of the meeting should be written in:', opts:['First person subjective','Third person objective','Conversational style','Emotional language'], ans:1, exp:'Objective, third-person, factual recording'}
+],
+
+financial: [
+  {q:'Formula to sum only "Office Supplies" category:', opts:['=SUM(A:A)','=SUMIF(A:A, "Office Supplies", C:C)','=COUNTIF(A:A, "Office Supplies")','=IF(A:A="Office Supplies", C:C)'], ans:1, exp:'SUMIF filters and sums conditionally'},
+  {q:'Reference cell G15 from "January" worksheet:', opts:['=January.G15','=January!G15','=January:G15','=January@G15'], ans:1, exp:'Worksheet!Cell format for cross-sheet references'},
+  {q:'=IF(D10>C10, "OVER BUDGET", "WITHIN BUDGET") — if D10=C10, returns:', opts:['OVER BUDGET','WITHIN BUDGET','#ERROR','0'], ans:1, exp:'Condition is D10>C10 (strictly greater); equal = false → WITHIN BUDGET'},
+  {q:'Display name as "Cruz, Juan" from Last Name B2, First Name A2:', opts:['=B2+", "+A2','=B2&", "&A2','=B2,", ",A2','=JOIN(B2,A2)'], ans:1, exp:'& is text concatenation operator'},
+  {q:'VLOOKUP returns #N/A even though value exists. Likely cause:', opts:['Wrong function used','Data type mismatch or trailing spaces','Sheet is hidden','Cell is empty'], ans:1, exp:'TRIM() or standardize formatting to fix'},
+  {q:'Monthly salary ₱33,947 ÷ 22 days = daily rate of:', opts:['₱1,453.05','₱1,543.05','₱1,633.05','₱1,500.00'], ans:1, exp:'33,947 ÷ 22 = 1,543.05'},
+  {q:'Gross ₱53,818 minus mandatory deductions ₱5,825 = Taxable Income:', opts:['₱47,993','₱48,993','₱46,993','₱59,643'], ans:0, exp:'53,818 − 5,825 = 47,993'},
+  {q:'GSIS Personal Share = basic salary ×:', opts:['7%','9%','12%','15%'], ans:1, exp:'Personal share = 9% of basic salary'},
+  {q:'GSIS Government Share = basic salary ×:', opts:['7%','9%','12%','15%'], ans:2, exp:'Government share = 12% of basic salary'},
+  {q:'PERA ₱2,000, 5 days LWOP out of 22. Prorated PERA:', opts:['₱1,454.55','₱1,545.45','₱1,636.36','₱454.55'], ans:1, exp:'(2,000 ÷ 22) × 17 = 1,545.45'},
+  {q:'Cash advance ₱35,000; liquidated ₱32,450.50. Unliquidated balance:', opts:['₱2,459.50','₱2,549.50','₱3,549.50','₱1,549.50'], ans:1, exp:'35,000 − 32,450.50 = 2,549.50'},
+  {q:'Gross VAT-inclusive ₱15,000. Net of VAT base:', opts:['₱13,392.86','₱13,200.00','₱12,500.00','₱14,000.00'], ans:0, exp:'15,000 ÷ 1.12 = 13,392.86'},
+  {q:'5% Final VAT withholding on net of VAT ₱13,392.86:', opts:['₱669.64','₱750.00','₱600.00','₱569.64'], ans:0, exp:'13,392.86 × 0.05 = 669.64'},
+  {q:'1% EWT on net of VAT ₱13,392.86:', opts:['₱133.93','₱150.00','₱100.00','₱233.93'], ans:0, exp:'13,392.86 × 0.01 = 133.93'},
+  {q:'Electricity: (Current 1,500 kWh − Previous 1,200 kWh) × ₱11.20/kWh =', opts:['₱3,360.00','₱3,000.00','₱16,800.00','₱13,440.00'], ans:0, exp:'300 kWh × 11.20 = 3,360'},
+  {q:'Annual MOOE ₱480,000 × 15% cap for janitorial/security =', opts:['₱48,000','₱72,000','₱24,000','₱96,000'], ans:1, exp:'480,000 × 0.15 = 72,000'},
+  {q:'Q1: Allocation ₱120K, Disbursement ₱95K. Utilization rate:', opts:['75.00%','79.17%','85.00%','90.00%'], ans:1, exp:'(95,000 ÷ 120,000) × 100 = 79.17%'},
+  {q:'Utilization rate 79.17% means:', opts:['Overutilizing','Underutilizing','Just right','Perfect'], ans:1, exp:'Below 90% = underutilizing'},
+  {q:'Q1-Q3 total inflow ₱360K, total outflow ₱340K. Cumulative balance:', opts:['₱10,000','₱20,000','₱30,000','₱40,000'], ans:1, exp:'360,000 − 340,000 = 20,000'},
+  {q:'Best tool to summarize 2,000-row ledger by Object Code:', opts:['SUMIF formulas','Pivot Table','AutoFilter','Sorting'], ans:1, exp:'Pivot Table most efficient for large dataset aggregation'},
+  {q:'Function to force value to exactly 2 decimal places:', opts:['=ROUND(formula, 2)','=FORMAT(formula, 2)','=FIX(formula)','=TRUNCATE(formula)'], ans:0, exp:'ROUND changes actual value, not just display'},
+  {q:'=IF(AND(F2>50000, E2="Capital Outlay"), "CRITICAL APPROVAL", "Standard") — both conditions met returns:', opts:['Standard','CRITICAL APPROVAL','#ERROR','TRUE'], ans:1, exp:'AND requires both conditions TRUE'},
+  {q:'Teacher I basic ₱31,705 × 9% GSIS personal share:', opts:['₱2,553.45','₱2,853.45','₱3,804.60','₱1,853.45'], ans:1, exp:'31,705 × 0.09 = 2,853.45'},
+  {q:'Teacher I basic ₱31,705 × 12% GSIS government share:', opts:['₱2,853.45','₱3,804.60','₱4,804.60','₱1,804.60'], ans:1, exp:'31,705 × 0.12 = 3,804.60'},
+  {q:'Gross ₱15,000 minus 5% VAT ₱669.64 minus 1% EWT ₱133.93. Net payable:', opts:['₱14,196.43','₱14,000.00','₱13,392.86','₱14,500.00'], ans:0, exp:'15,000 − 669.64 − 133.93 = 14,196.43'}
+]
+};
+
+// Build category checkboxes
+const focusArea = document.getElementById('focusArea');
+for(const key in CATEGORIES){
+  const label = document.createElement('label');
+  label.innerHTML = `<input type="checkbox" value="${key}" onchange="updateCounter()"> ${CATEGORIES[key]}`;
+  focusArea.appendChild(label);
+}
+
+function updateCounter(){
+  document.getElementById('countDisplay').textContent = document.querySelectorAll('#focusArea input:checked').length;
+}
+
+function selectAll(doSelect){
+  document.querySelectorAll('#focusArea input').forEach(cb => cb.checked = doSelect);
+  updateCounter();
+}
+
+// ========== EXAM ENGINE ==========
+let currentExam = [], currentIndex = 0, totalScore = 0, userAnswers = [];
+
+function startExam(){
+  let selected = [...document.querySelectorAll('#focusArea input:checked')].map(cb => cb.value);
+  if(selected.length === 0){ alert('Please select at least one category first!'); return; }
+  
+  currentExam = [];
+  selected.forEach(cat => {
+    if(QUESTIONS[cat]) QUESTIONS[cat].forEach(q => currentExam.push({...q, cat}));
+  });
+  
+  currentExam = currentExam.sort(() => Math.random() - 0.5).slice(0, examMode);
+  currentIndex = 0; totalScore = 0; userAnswers = [];
+  
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion(){
+  if(currentIndex >= currentExam.length){
+    showResult();
+    return;
+  }
+  const q = currentExam[currentIndex];
+  const pct = ((currentIndex) / currentExam.length) * 100;
+  
+  document.getElementById('quizArea').innerHTML = `
+    <p><b>Question ${currentIndex+1} of ${currentExam.length}</b> <span style="float:right;color:var(--m)">${CATEGORIES[q.cat]}</span></p>
+    <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+    <p class="qbox">${q.q}</p>
+    ${q.opts.map((opt, i) => `<button class="choice" data-idx="${i}" onclick="checkAnswer(${i}, ${q.ans}, '${q.exp.replace(/'/g,"\\'")}')">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}
+    <div id="feedbackBox" class="feedback" style="display:none"></div>
+  `;
+}
+
+function checkAnswer(userChoice, correctChoice, explanation){
+  document.querySelectorAll('.choice').forEach(b => b.disabled = true);
+  document.querySelectorAll('.choice')[correctChoice].classList.add('correct');
+  if(userChoice !== correctChoice) document.querySelectorAll('.choice')[userChoice].classList.add('wrong');
+  
+  const fb = document.getElementById('feedbackBox');
+  userAnswers[currentIndex] = {user: userChoice, correct: correctChoice};
+  
+  if(userChoice === correctChoice){
+    totalScore++;
+    fb.className = 'feedback correct-fb';
+    fb.innerHTML = '<b>CORRECT!</b> Great job!<br><br><b>Explanation:</b> ' + explanation;
+  } else {
+    fb.className = 'feedback wrong-fb';
+    fb.innerHTML = '<b>WRONG.</b> Don\'t worry, learn and remember!<br><br><b>Correct Answer:</b> ' + String.fromCharCode(65+correctChoice) + '<br><b>Explanation:</b> ' + explanation;
+  }
+  fb.style.display = 'block';
+  fb.innerHTML += `<br><div class="actions"><button class="btn" onclick="nextQuestion()">${currentIndex < currentExam.length-1 ? 'Next Question →' : 'See My Score →'}</button></div>`;
+}
+
+function nextQuestion(){
+  currentIndex++;
+  renderQuestion();
+}
+
+function showResult(){
+  const pct = Math.round((totalScore / currentExam.length) * 100);
+  let rating = '';
+  if(pct >= 90) rating = 'Excellent! Outstanding preparation!';
+  else if(pct >= 80) rating = 'Very Good! Almost there!';
+  else if(pct >= 70) rating = 'Good! Review weak areas and try again.';
+  else if(pct >= 60) rating = 'Fair. More study needed.';
+  else rating = 'Needs improvement. Study lessons thoroughly.';
+  
+  let reviewHTML = '<h3 style="margin-top:20px">Answer Review</h3>';
+  currentExam.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const isCorrect = ua && ua.user === ua.correct;
+    reviewHTML += `
+      <div class="review-item ${isCorrect ? 'correct' : 'wrong'}">
+        <b>Q${i+1}.</b> ${q.q}<br>
+        <small style="color:var(--m)">${CATEGORIES[q.cat]}</small><br>
+        Your answer: <b>${ua ? String.fromCharCode(65+ua.user) : '—'}</b> ${q.opts[ua.user] || ''}<br>
+        Correct answer: <b>${String.fromCharCode(65+ua.correct)}</b> ${q.opts[ua.correct]}<br>
+        <b>Explanation:</b> ${q.exp}
+      </div>
+    `;
+  });
+  
+  document.getElementById('quizArea').innerHTML = `
+    <h3>Exam Completed!</h3>
+    <p class="score">Score: ${totalScore} / ${currentExam.length} (${pct}%)</p>
+    <p>${rating}</p>
+    <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+    <div class="actions">
+      <button class="btn" onclick="document.getElementById('quizArea').style.display='none';document.getElementById('setup').style.display='block';">Back to Selection</button>
+      <button class="btn alt" onclick="document.getElementById('reviewSection').scrollIntoView({behavior:'smooth'})">Review My Answers</button>
+    </div>
+    <div id="reviewSection">${reviewHTML}</div>
+    <div class="actions" style="margin-top:20px">
+      <button class="btn" onclick="document.getElementById('quizArea').style.display='none';document.getElementById('setup').style.display='block';">Back to Selection</button>
+    </div>
+  `;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+
+<!-- ========== PART 2 END ========== -->
+
+
+<!-- ========== PART 3 START ========== -->
+
+<!-- ========== INTERVIEW SECTION ========== -->
+<section id="interview" class="content">
+<div class="card">
+<h2>AO II Interview Practice</h2>
+<div class="note">
+<b>Answer Framework: S-T-A-R</b><br>
+<b>S</b>ituation &rarr; <b>T</b>ask &rarr; <b>A</b>ction &rarr; <b>R</b>esult<br>
+Keep answers: clear, concise, honest, professional, rule-based, and focused on public service.
+</div>
+<p>Click each button to reveal a suggested answer. Adapt it to your own genuine experience.</p>
+</div>
+
+<div id="interviewList">
+
+<div class="interview">
+<p><b>Q1: Tell us about yourself and why you want to be an Administrative Officer II.</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I am a dedicated, organized, and service-oriented individual with [number] years of experience in administrative work. I hold a [degree] and have acquired Civil Service Professional eligibility. My experience includes records management, document processing, financial documentation, and coordinating with various stakeholders. I want to be an Administrative Officer II because I am passionate about public service and believe that efficient administration is the backbone of quality education delivery. I am well-versed in the laws and procedures that govern government operations, including RA 6713, procurement rules, and data privacy. I want to contribute my skills to ensure that school operations run smoothly, resources are used properly, and teachers and staff receive the administrative support they need to focus on educating our learners.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q2: How do you handle confidential documents and sensitive information?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I strictly follow RA 10173 (Data Privacy Act) and office regulations. I only access information when authorized and necessary for official duties. I store physical documents in locked file cabinets and digital files in password-protected folders with controlled access. I never discuss sensitive details outside work or with unauthorized persons. When disposing of confidential records, I follow proper procedures such as shredding or secure deletion. I also ensure that I only share information with people who have the legal right and official need to know. Confidentiality is not just a rule for me—it is a professional obligation that protects the rights and dignity of the people we serve.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q3: What would you do if your supervisor asks you to do something that seems against rules or regulations?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I would politely and respectfully ask for clarification and, if appropriate, cite the specific rule or policy that I believe applies. I would explain my understanding professionally and offer the proper, legal way to accomplish the task. If I am certain it violates laws or procedures, I will clearly explain the regulation and its rationale. If the instruction still conflicts, I will follow established channels to report or escalate the matter appropriately, always keeping the public interest and integrity first. I believe that open, respectful communication can resolve most issues, and that my duty is to uphold the law and the public trust above all else.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q4: How do you organize and prioritize your work when you have a heavy workload and tight deadlines?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I list all tasks clearly, then prioritize based on urgency, importance, and deadlines using a checklist or digital tracker. I focus first on high-priority and time-sensitive items, especially those involving statutory deadlines like liquidation reports or SALN filings. I break large tasks into manageable steps. If the workload becomes too heavy, I communicate early with my supervisor about the situation, suggest possible adjustments or support needed, and propose which tasks can be rescheduled. I also keep my work area and files organized so I can work faster and avoid mistakes. Being organized allows me to meet deadlines without compromising the quality and accuracy of my work.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q5: What is your understanding of RA 6713 or the Code of Conduct, and how will you apply it?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> RA 6713 establishes that "public office is a public trust." It mandates 8 norms of conduct: Commitment to Public Interest, Professionalism, Justness and Sincerity, Political Neutrality, Responsiveness to the Public, Nationalism and Patriotism, Commitment to Democracy, and Simple Living. I will apply this by always prioritizing public interest over personal gain, performing my duties with excellence and integrity, treating everyone fairly without favoritism, refusing gifts or favors that may influence my actions, responding to the public promptly and courteously, and leading a modest lifestyle. I will also ensure that I respond to all requests within the 15-working-day deadline and file my SALN accurately and on time.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q6: Tell us about a time you made a mistake at work and how you handled it.</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> In my previous work, I once made an error in a financial report due to a miscalculation. When I discovered it, I immediately informed my supervisor, took full responsibility, and corrected the error right away. I also reviewed my entire process to identify where I went wrong and implemented an additional cross-checking step to prevent recurrence. I learned that mistakes, while undesirable, are opportunities to improve systems and personal discipline. What matters is acknowledging them promptly, correcting them, and putting safeguards in place so they do not happen again. This experience made me more careful, systematic, and accountable in all my work.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q7: How do you handle stress, pressure, and difficult situations?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I handle stress and pressure by remaining calm and focusing on what I can control. When facing multiple responsibilities, I prioritize tasks according to urgency and importance. I avoid making decisions based purely on emotions. I also believe that communication is important—if necessary, I seek guidance from people with more experience or coordinate with colleagues to find solutions. I maintain a positive attitude and see pressure as part of professional growth. Outside work, I make sure to get proper rest and maintain balance so I can stay productive and emotionally prepared.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q8: How would you handle a difficult or irate teacher, parent, or stakeholder?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I would listen calmly and respectfully without interrupting, allowing them to express their concern fully. I would show empathy and acknowledge their feelings. Then I would address the issue objectively, explain the relevant policy or procedure clearly, and offer practical solutions or the next steps. If the matter is beyond my authority, I would properly endorse or escalate it to the appropriate official. I would never argue or respond with hostility. My goal would be to resolve the concern fairly and professionally while upholding office rules and maintaining the person's dignity.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q9: What are your strengths and weaknesses?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> My strengths include being organized, detail-oriented, and dependable. I have strong knowledge of government rules and procedures, good computer skills especially in Excel and document processing, and I work well both independently and as part of a team. I am also committed to public service and integrity. As for weaknesses, I sometimes tend to be overly concerned about making mistakes, which in the past caused me to spend extra time reviewing my work. To improve, I have learned to prepare carefully, follow standard checklists, and trust my training while still being thorough. This has helped me become more confident and efficient while maintaining accuracy.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q10: Why should we hire you over other applicants?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> You should hire me because I combine the necessary qualifications—Civil Service Professional eligibility, relevant education, and administrative experience—with a genuine commitment to public service and integrity. I have prepared thoroughly for this position by studying the relevant laws, regulations, and practical skills needed by an AO II. I am organized, detail-oriented, and can be trusted with sensitive records and government funds. I am also eager to learn and adapt to the specific needs of your school. Most importantly, I treat public office as a public trust and will perform my duties with honesty, dedication, and excellence to support the delivery of quality education to our learners.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q11: How do you ensure accuracy in your work, especially with financial documents and records?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> Accuracy is fundamental in administrative and financial work. I ensure it by following established procedures and checklists, never rushing critical tasks, and always verifying details such as names, dates, figures, signatures, and supporting documents. For financial work, I cross-check totals, reconcile amounts against official receipts, and use Excel formulas to minimize manual calculation errors. I also review my work before submission and, when possible, have a second set of eyes verify critical documents. I believe that the extra time spent ensuring accuracy prevents much larger problems later and upholds the integrity of government records.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q12: What do you know about the duties of an Administrative Officer II in a school setting?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> An Administrative Officer II in a DepEd school performs a wide range of functions supporting the School Head and the entire school community. These include: records management—receiving, recording, routing, filing, and retrieving documents; personnel action assistance—processing appointments, leave applications, service records, and 201 files; property and supply management—inventory, PAR/ICS, procurement assistance, and disposal; financial assistance—MOOE liquidation, payroll preparation support, and compliance with COA rules; drafting of memoranda, transmittals, and other communications; coordination with the SDO, PSDS, and other stakeholders; and ensuring compliance with civil service rules, RA 6713, procurement laws, and data privacy. Essentially, the AO II ensures that the school's administrative operations run efficiently, legally, and in support of the school's educational mission.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q13: How do you handle conflict or disagreement with a coworker?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> When there is conflict or disagreement, I first try to understand the other person's perspective by listening openly. I would address the issue privately, calmly, and professionally, focusing on the work concern rather than personal differences. I would look for common ground and propose solutions that serve the best interest of the office and the public we serve. If we cannot resolve it directly, I would seek guidance from our supervisor in a respectful manner. I believe that maintaining professionalism and teamwork is essential, and that most conflicts can be resolved through respectful communication and a shared commitment to our public service mission.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q14: What motivates you to do your best in government service?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> What motivates me most is knowing that my work contributes to the delivery of public service, especially in education which shapes the future of our children. When I process documents accurately, manage resources properly, or support teachers and staff efficiently, I am helping create an environment where learning can happen. I am also motivated by the opportunity to uphold the integrity of public service—showing that government employees can be honest, efficient, and dedicated. The trust placed in public servants is a privilege, and I want to honor that by doing my best every day. Continuous learning and professional growth also motivate me, as I strive to become more effective in serving the public.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q15: Where do you see yourself 5 years from now?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> Five years from now, I see myself still serving in government, having grown both professionally and personally. I hope to have mastered the duties of Administrative Officer II and possibly advanced to a higher position through merit and continued excellent performance. I envision myself as a more competent, knowledgeable, and effective public servant who can mentor newer employees and contribute to improving office systems and procedures. Regardless of position, I see myself upholding the highest standards of integrity, professionalism, and dedication to public service, and continuing to support the Department's mission of delivering quality, accessible, and liberating education to all Filipinos.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q16: What is the most important lesson you have learned from your life experiences?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> One of the most important lessons I have learned is that every challenge is an opportunity to learn and become stronger. There were times when I experienced difficulties and situations that did not go according to plan. Instead of giving up, I learned to remain patient, analyze the situation, and find ways to move forward. Personally, these experiences taught me responsibility, resilience, and understanding of others. Professionally, I apply this lesson by remaining calm when facing difficult situations, learning from my mistakes, and using my experiences to become a better employee. I believe that what matters is not how many challenges we face, but how we respond to them with integrity and perseverance.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q17: How do you demonstrate teamwork in the workplace?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I demonstrate teamwork by communicating openly and respectfully with colleagues, sharing information and resources, and being willing to help others when I can, especially during peak periods. I respect each person's role and contribution, and I value diverse perspectives. I fulfill my own responsibilities reliably so that the team's workflow is not disrupted. When there are group tasks, I participate actively, listen to suggestions, and work toward solutions that benefit the whole team. I believe that strong teamwork in government service leads to better, more efficient service to the public.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q18: Are you willing to render overtime work or perform other related tasks when needed?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> Yes, I am willing to render overtime or perform other related tasks when the service requires it, especially during critical periods such as enrollment, liquidation deadlines, report submissions, or emergency situations. I understand that public service sometimes demands extra time and effort to meet the needs of the school and the stakeholders we serve. However, I will also ensure that I manage my time well and maintain my health and efficiency. My priority is always to deliver quality service and meet our obligations to the public.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q19: How do you keep yourself updated with new policies and regulations?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> I make it a habit to regularly read official issuances from the Civil Service Commission, DepEd, DBM, GPPB, and COA. I check the official websites and bulletins, attend seminars and training when available, and participate in office discussions of new policies. I also maintain a personal file of important laws and circulars for quick reference. I believe that continuous learning is essential in government service because rules and regulations are updated from time to time, and an effective AO II must always be knowledgeable and compliant.</p>
+</div>
+</div>
+
+<div class="interview">
+<p><b>Q20: Do you have any questions for us?</b></p>
+<button class="btn alt" onclick="toggleSample(this)">Show/Hide Suggested Answer</button>
+<div class="sample">
+<p><b>Suggested Answer:</b> Yes, thank you. I would like to ask about the priorities and immediate challenges of the Administrative Office in the coming months, so I can prepare myself to contribute effectively if given the opportunity. I would also appreciate knowing what qualities or areas of performance the school values most in an Administrative Officer, so I can ensure I meet and exceed those expectations. Finally, I am interested in learning about the professional development opportunities available for administrative staff to continuously improve our skills and service.</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- ========== DOCUMENT DRAFTING SECTION ========== -->
+<section id="drafting" class="content">
+<div class="card">
+<h2>Document & Memorandum Drafting</h2>
+<p>These samples show the proper format of common DepEd administrative documents, styled to resemble how they would appear in Microsoft Word. Study the structure, parts, and language used.</p>
+<div class="note">
+<b>Tips for good drafting:</b> Always use complete dates, be specific and concise, follow the chain of command ("THRU" line), list enclosures clearly, and proofread before printing/signing.
+</div>
+</div>
+
+<details class="lesson" open>
+<summary>Sample 1: Division Memorandum</summary>
+<div class="word-doc">
+<div class="letterhead">
+<div class="agency">Republic of the Philippines<br>Department of Education<br>Region VI &mdash; Western Visayas<br>SCHOOLS DIVISION OFFICE OF NEGROS OCCIDENTAL</div>
+<small>[Province Address, Contact Number, Email]</small>
+</div>
+
+<div class="memo-title">Division Memorandum</div>
+
+<div class="memo-meta">
+<div class="lbl">No.:</div><div><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>, s. 2026</div>
+<div class="lbl">TO:</div><div>Assistant Schools Division Superintendents<br>Public Schools District Supervisors<br>Public Elementary and Secondary School Heads<br>All Others Concerned</div>
+<div class="lbl">FROM:</div><div>[Name of SDS]<br>Schools Division Superintendent</div>
+<div class="lbl">SUBJECT:</div><div><b>DIVISION ORIENTATION ON THE UTILIZATION OF THE 2026 ENHANCED SCHOOL IMPROVEMENT PLAN (eSIP)</b></div>
+<div class="lbl">DATE:</div><div>July 6, 2026</div>
+</div>
+
+<p>1. In line with the Department's commitment to continuous quality improvement and data-driven school management, this Office announces the conduct of the Division Orientation on the Utilization of the 2026 Enhanced School Improvement Plan (eSIP) on <b>July 24, 2026</b>, at <b>8:00 o'clock in the morning</b> at the Division Training Center, [Location].</p>
+
+<p>2. The activity aims to orient participants on the enhanced planning process, data analysis tools, and alignment of programs with the SIP/AIP framework.</p>
+
+<p>3. Attendance of all participants is <b>required</b>. Travel expenses shall be charged against local funds subject to the usual accounting and auditing rules.</p>
+
+<p>4. Immediate dissemination of and strict compliance with this Memorandum is desired.</p>
+
+<div class="sig-block">
+<div class="sig-line"></div>
+<div><b>[NAME OF SUPERINTENDENT]</b></div>
+<div>Schools Division Superintendent IV</div>
+</div>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 2: School Transmittal Memorandum</summary>
+<div class="word-doc">
+<div class="letterhead">
+<div class="agency">Republic of the Philippines<br>Department of Education<br>Region VI &mdash; Western Visayas<br>SCHOOLS DIVISION OFFICE OF NEGROS OCCIDENTAL<br>[NAME OF ELEMENTARY SCHOOL]</div>
+<small>[School Address, Email, Contact Number]</small>
+</div>
+
+<div class="memo-title">School Memorandum</div>
+
+<div class="memo-meta">
+<div class="lbl">FOR:</div><div><b>[NAME OF SUPERINTENDENT]</b><br>Schools Division Superintendent<br>Schools Division Office of Negros Occidental</div>
+<div class="lbl">THRU:</div><div><b>[NAME OF PSDS]</b><br>Public Schools District Supervisor<br>[District Name]</div>
+<div class="lbl">FROM:</div><div><b>[NAME OF PRINCIPAL]</b><br>School Principal I</div>
+<div class="lbl">SUBJECT:</div><div><b>TRANSMITTAL OF DOCUMENTS FOR THE 2-DAY SCHOOL-BASED TRAINING WORKSHOP ON DIGITAL LITERACY</b></div>
+<div class="lbl">DATE:</div><div>[Current Date]</div>
+</div>
+
+<p>1. Respectfully forwarded to the Schools Division Superintendent, through the Public Schools District Supervisor, the attached documents for the 2-Day School-Based Training Workshop on Digital Literacy of [School Name] on <b>August 6 to 7, 2026</b>.</p>
+
+<p>2. Enclosed are the following documents for your evaluation and favorable approval:</p>
+<p style="margin-left:25px">a. Signed Project Proposal;<br>
+b. Training Matrix; and<br>
+c. List of Participants.</p>
+
+<p>3. Expenses for this activity will be charged against the school's local In-Service Training (INSET) funds, subject to standard accounting and auditing rules.</p>
+
+<p>4. For your information and favorable approval.</p>
+
+<div class="sig-block">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>School Principal I</div>
+</div>
+
+<p style="margin-top:30px;border-top:1px solid #333;padding-top:5px;font-size:11px">
+<b>Received by:</b> ___________________________<br>
+<b>Signature over Printed Name</b><br>
+<b>Date/Time:</b> ___________________________
+</p>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 3: Notice of Meeting & Agenda</summary>
+<div class="word-doc">
+<p><b>NOTICE OF MEETING</b></p>
+<p>Please be informed that there will be an urgent meeting of the <b>School Governance Council (SGC)</b> on <b>July 10, 2026</b>, at <b>1:30 o'clock in the afternoon</b> at the <b>Principal's Office</b>.</p>
+
+<p>The agenda of the meeting will be as follows:</p>
+<ol>
+<li>Call to Order and Roll Call of Attendance</li>
+<li>Review and Approval of the Previous Minutes</li>
+<li>Mid-Year Brigada Eskwela Implementation Progress Report</li>
+<li>Proposed School MOOE Budget Realignments for Q3</li>
+<li>Other Matters / Open Forum</li>
+<li>Adjournment</li>
+</ol>
+
+<p>Your presence and active participation are highly desired.</p>
+
+<p style="margin-top:40px">Attested:</p>
+<div class="sig-block">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>School Principal I / SGC Chairperson</div>
+</div>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 4: Minutes of the Meeting (Excerpt)</summary>
+<div class="word-doc">
+<p style="text-align:center"><b>MINUTES OF THE FACULTY MEETING</b></p>
+<p style="text-align:center">[Date] | [Venue]</p>
+
+<p><b>Attendees:</b> [List of names and positions]</p>
+<p><b>Presiding Officer:</b> [Name of Principal]</p>
+<p><b>Secretary:</b> [Name of Secretary]</p>
+
+<h4>V. HIGHLIGHTS OF THE DISCUSSION</h4>
+<p><b>A. Learning Material Distribution Delay</b></p>
+<p>Mrs. Maria Santos, Grade 3 Coordinator, raised a concern regarding the insufficient copies of Grade 3 Mathematics modules currently available for the tracking quarter.</p>
+
+<p>In response, the School Principal, Dr. [Name], clarified that the bulk delivery of learning materials from the SDO Supply Section is officially scheduled for the <b>third week of July 2026</b>. Dr. [Name] advised the grade coordinators to utilize temporary digital copies or shared learning packets in the interim.</p>
+
+<h4>VI. ACTIONS AGREED UPON</h4>
+<ol>
+<li>Grade coordinators to prepare digital copies of modules for sharing.</li>
+<li>Administrative Office to follow up with SDO Supply Section on the delivery schedule.</li>
+</ol>
+
+<h4>VII. ADJOURNMENT</h4>
+<p>The meeting was adjourned at [time] with no further matters to discuss.</p>
+
+<p style="margin-top:40px">Prepared by:</p>
+<div class="sig-block">
+<div class="sig-line"></div>
+<div><b>[NAME OF SECRETARY]</b></div>
+<div>Secretary</div>
+</div>
+
+<p style="margin-top:20px">Certified correct:</p>
+<div class="sig-block">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>Presiding Officer</div>
+</div>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 5: Formal Request Letter</summary>
+<div class="word-doc">
+<div class="letterhead">
+<div class="agency">Republic of the Philippines<br>Department of Education<br>[NAME OF SCHOOL]</div>
+</div>
+
+<p style="margin-top:30px">[Date]</p>
+
+<p><b>[NAME OF SUPERINTENDENT]</b><br>
+Schools Division Superintendent<br>
+Schools Division Office of Negros Occidental<br>
+[Address]</p>
+
+<p><b>Dear Madam/Sir:</b></p>
+
+<p>The undersigned respectfully requests permission to conduct a <b>2-Day School-Based Training Workshop on Digital Literacy</b> for twenty-five (25) teaching personnel of [School Name] from <b>August 6 to August 7, 2026</b>, at the School ICT Laboratory.</p>
+
+<p>This program aims to capacitate our faculty with advanced spreadsheet and document processing skills essential for accurate financial and student data management. Expenses incurred for meals and training materials shall be charged against the school's local In-Service Training (INSET) fund, subject to standard accounting and auditing procedures.</p>
+
+<p>Attached herewith are the training matrix, project proposal, and list of participants for your review and favorable approval.</p>
+
+<p>Thank you very much for your continued support to our school's professional development initiatives.</p>
+
+<p>Respectfully yours,</p>
+
+<div class="sig-block" style="margin-top:50px">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>School Principal I</div>
+</div>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 6: Incident Report</summary>
+<div class="word-doc">
+<p style="text-align:center"><b>INCIDENT REPORT</b></p>
+
+<table>
+<tr><td style="width:200px"><b>Nature of Incident:</b></td><td>Electrical Malfunction / Equipment Hazard</td></tr>
+<tr><td><b>Date and Time:</b></td><td>July 6, 2026, at approximately 9:15 AM</td></tr>
+<tr><td><b>Location:</b></td><td>School ICT Laboratory, Building B</td></tr>
+<tr><td><b>Reported by:</b></td><td>[Name of Property Custodian / AO II]</td></tr>
+</table>
+
+<h4>Details of the Incident:</h4>
+<p>At approximately 9:15 AM on July 6, 2026, the property custodian noticed visible sparks and light smoke originating from the main circuit breaker panel inside the School ICT Laboratory. The school's emergency response protocol was immediately activated; the laboratory was evacuated, and the main power isolation switch was safely shut off. The local bureau and representatives from the local electric cooperative were contacted for emergency inspection.</p>
+
+<p><b>No injuries were reported</b>, and no computers or central servers sustained damage. The system remains powered down pending structural clearance and repair.</p>
+
+<h4>Action Taken:</h4>
+<ol>
+<li>Evacuated the area and ensured safety of all personnel</li>
+<li>Shut off main power supply</li>
+<li>Notified School Head and local electric cooperative</li>
+<li>Documented the incident for records and reporting</li>
+</ol>
+
+<h4>Recommendation:</h4>
+<p>Immediate inspection and repair by a licensed electrician is recommended before the ICT Laboratory is used again. A review of the building's electrical load capacity is also advised.</p>
+
+<div class="sig-block" style="margin-top:40px">
+<div class="sig-line"></div>
+<div><b>[NAME OF AO II / PROPERTY CUSTODIAN]</b></div>
+<div>Reporting Officer</div>
+</div>
+
+<div class="sig-block" style="margin-top:30px">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>School Principal I</div>
+</div>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 7: Property Inventory Ledger</summary>
+<div class="word-doc">
+<p style="text-align:center"><b>DEPED SCHOOL PROPERTY & INVENTORY LEDGER</b></p>
+<p style="text-align:center">[School Name] | [Division]</p>
+
+<table>
+<tr>
+<th>Item No.</th>
+<th>Property Number</th>
+<th>Description</th>
+<th>Qty</th>
+<th>Unit Value (PhP)</th>
+<th>Acquisition Date</th>
+<th>Status</th>
+</tr>
+<tr>
+<td>001</td>
+<td>DEPED-NOC-026-01</td>
+<td>Laptop (Brand X, Core i5, 8GB RAM)</td>
+<td>1</td>
+<td>35,000.00</td>
+<td>July 2, 2026</td>
+<td>Functional</td>
+</tr>
+<tr>
+<td>002</td>
+<td>DEPED-NOC-026-02</td>
+<td>Laptop (Brand X, Core i5, 8GB RAM)</td>
+<td>1</td>
+<td>35,000.00</td>
+<td>July 2, 2026</td>
+<td>Functional</td>
+</tr>
+<tr>
+<td>003</td>
+<td>DEPED-NOC-026-03</td>
+<td>Laptop (Brand X, Core i5, 8GB RAM)</td>
+<td>1</td>
+<td>35,000.00</td>
+<td>July 2, 2026</td>
+<td>Functional</td>
+</tr>
+<tr>
+<td><b>TOTAL</b></td>
+<td colspan="2"><b>Total Inventory Value</b></td>
+<td><b>3</b></td>
+<td><b>105,000.00</b></td>
+<td colspan="2"></td>
+</tr>
+</table>
+
+<p style="margin-top:30px;font-size:11px"><i>Note: Assign distinct alphanumeric Property Numbers per asset unit. Update regularly after physical inventory.</i></p>
+</div>
+</details>
+
+<details class="lesson">
+<summary>Sample 8: MOOE Liquidation Report</summary>
+<div class="word-doc">
+<p style="text-align:center"><b>CASH ADVANCE LIQUIDATION REPORT</b></p>
+<p style="text-align:center">MOOE Fund | [School Name]</p>
+
+<p><b>Date of Cash Advance:</b> [Date]<br>
+<b>Amount of Cash Advance:</b> PhP 25,000.00<br>
+<b>Purpose:</b> School Minor Repairs & Maintenance</p>
+
+<table>
+<tr>
+<th>Date</th>
+<th>DV/OR No.</th>
+<th>Particulars / Payee</th>
+<th>COA Object Code</th>
+<th>Amount (PhP)</th>
+</tr>
+<tr>
+<td>07/01/2026</td>
+<td>OR-99831</td>
+<td>Hardware Supplies (Paints, Brushes)</td>
+<td>5020308000</td>
+<td>12,450.00</td>
+</tr>
+<tr>
+<td>07/03/2026</td>
+<td>OR-44120</td>
+<td>Plumbing Maintenance (Labor Services)</td>
+<td>5021304002</td>
+<td>8,000.00</td>
+</tr>
+<tr>
+<td>07/05/2026</td>
+<td>OR-11209</td>
+<td>Office Stationery Materials</td>
+<td>5020301000</td>
+<td>4,200.00</td>
+</tr>
+<tr>
+<td colspan="4" style="text-align:right"><b>Total Cash Outflow:</b></td>
+<td><b>24,650.00</b></td>
+</tr>
+<tr>
+<td colspan="4" style="text-align:right"><b>Refund of Unutilized Balance:</b></td>
+<td><b>350.00</b></td>
+</tr>
+<tr>
+<td colspan="4" style="text-align:right"><b>Accountability Status:</b></td>
+<td><b>100% Fully Liquidated</b></td>
+</tr>
+</table>
+
+<div class="sig-block" style="margin-top:40px">
+<div class="sig-line"></div>
+<div><b>[NAME OF AO II / DISBURSING OFFICER]</b></div>
+<div>Preparing / Liquidating Officer</div>
+</div>
+
+<div class="sig-block" style="margin-top:30px">
+<div class="sig-line"></div>
+<div><b>[NAME OF PRINCIPAL]</b></div>
+<div>Certified Correct / Approved</div>
+</div>
+</div>
+</details>
+
+</section>
+
+<footer>
+Verify current CSC, DepEd, GPPB, DBM, and COA issuances before relying on any rule for an actual application or examination.<br>
+AO II Written Exam Reviewer v2.0 &mdash; Study aid only.
+</footer>
+
+</div>
+
+<script>
+/* ========== TRIAL TIMER SCRIPT START ========== */
+(function(){
+  const DURATION = 60;
+  let remaining = DURATION;
+  let timerId = null;
+  const timer = document.getElementById('trialTimer');
+  const dialog = document.getElementById('trialDialog');
+  function update(){
+    const m=Math.floor(remaining/60), sec=remaining%60;
+    timer.textContent='Trial: '+m+':'+String(sec).padStart(2,'0');
+  }
+  function finish(){
+    clearInterval(timerId);
+    timer.textContent='Trial: 0:00';
+    dialog.style.display='flex';
+  }
+  window.restartTrial=function(){
+    window.location.reload();
+  };
+  update();
+  timerId=setInterval(function(){
+    remaining--;
+    update();
+    if(remaining<=0) finish();
+  },1000);
+})();
+/* ========== TRIAL TIMER SCRIPT END ========== */
+
+function toggleSample(btn) {
+  const sample = btn.nextElementSibling;
+  sample.classList.toggle('show');
+}
+</script>
+
+</body>
+</html>
+<!-- ========== PART 3 END ========== -->
